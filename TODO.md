@@ -2,7 +2,7 @@
 
 ## High Priority (necessary)
 - decide on goal / topic for project
-    - Hitze-Awareness
+    - **Hitze-Awareness**
     - Schutz vor Naturgefahren / Hochwasser
     - Digitaler Energiezwilling für Dresden
     - Wildcard

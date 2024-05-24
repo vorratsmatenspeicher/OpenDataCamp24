@@ -22,13 +22,15 @@ class DialogAgent(abc.ABC):
 
 JSON_KEYWORD = "CALL_DATA_AGENT"
 
+
 @dataclasses.dataclass
 class Session:
     location_determiner: LocationDeterminer
     dialog_agent: DialogAgent
 
     def get_response(self, prompt: str) -> str:
-        response = self.dialog_agent.get_response(prompt)
+        self.dialog_agent.add_message(prompt, "user")
+        response = self.dialog_agent.get_response()
 
         if response.startswith(JSON_KEYWORD):
             data = json.loads(response[len(JSON_KEYWORD):])
@@ -36,8 +38,3 @@ class Session:
             self.dialog_agent.add_message(f"Location: {location}", "system")
 
         return self.dialog_agent.get_response()
-
-
-
-
-        if response.startswith("MAGIC KEYWORD")

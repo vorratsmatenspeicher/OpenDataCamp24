@@ -48,6 +48,13 @@
         "returns": {
           ... // Temperaturen, und Zeiten IN °C
         }
+    },
+    {
+        "name": "HITZE_HANDBUCH",
+        "description": "Schlägt passend zu einem Prompt Informationen im Hitze-Handbuch nach.",
+        "args": {
+            "prompt": "Die Frage zu der Informationen nachgeschlagen werden sollen."
+        }
     }
   ]
 }

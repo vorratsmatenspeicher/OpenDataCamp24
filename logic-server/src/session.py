@@ -80,6 +80,19 @@ class DataAgent:
             except Exception as e:
                 # raise
                 return {"error": str(e)}
+        elif service == "HITZE_HANDBUCH":
+            try:
+                prompt = arguments["prompt"]
+            except KeyError as e:
+                raise InvalidApiCall(
+                    'Der API-Aufruf muss die Argumente \'prompt\', enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+            try:
+                from heat_tips_retrieval.file_retrieval import retrieve_from_file
+                return retrieve_from_file(None,None,prompt, False)
+            except Exception as e:
+                # raise
+                return {"error": str(e)}
+
 
         else:
             return {"error": f"Unknown service {service}"}

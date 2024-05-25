@@ -3,7 +3,7 @@ from openai import OpenAI
 
 dotenv.load_dotenv()
 
-def retrieve_from_file(assistant_id, vector_store_id, prompt):
+def retrieve_from_file(assistant_id, vector_store_id, prompt, streaming):
     client = OpenAI()
     
     assistant = client.beta.assistants.retrieve(
@@ -11,7 +11,7 @@ def retrieve_from_file(assistant_id, vector_store_id, prompt):
     )
 
     # Upload the user provided file to OpenAI
-    message_file = client.beta.vector_stores.retrieve(vector_store_id=vector_store_id if vector_store_id else "vs_pLpEAa2FTxQXX1Gkorw5RSJQ")
+    #message_file = client.beta.vector_stores.retrieve(vector_store_id=vector_store_id if vector_store_id else "vs_pLpEAa2FTxQXX1Gkorw5RSJQ")
 
     # Create a thread and attach the file to the message
     thread = client.beta.threads.create(
@@ -44,6 +44,7 @@ def retrieve_from_file(assistant_id, vector_store_id, prompt):
 
         print(message_content.value)
         print("\n".join(citations))
+        return message_content.value
 
     def run_with_streaming():
         from typing_extensions import override
@@ -85,8 +86,12 @@ def retrieve_from_file(assistant_id, vector_store_id, prompt):
         ) as stream:
             stream.until_done()
 
-    run_with_streaming()
+    if streaming: 
+        run_with_streaming() 
+    else: 
+        return run_without_streaming()
+    return None
 
 # Beispiel zur Nutzung der Funktion
 if __name__ == "__main__":
-    retrieve_from_file(None, None, "Warum sind Menschen ab 65 besonders von Hitze betroffen?")
+    retrieve_from_file(None, None, "Warum sind Menschen ab 65 besonders von Hitze betroffen?", True)

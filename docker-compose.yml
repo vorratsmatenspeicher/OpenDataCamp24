@@ -4,6 +4,8 @@ services:
     ports:
       - "5001:5000"
     restart: unless-stopped
+    volumes:
+      - ./cache:/app/cache
 
   app:
     build: ./app

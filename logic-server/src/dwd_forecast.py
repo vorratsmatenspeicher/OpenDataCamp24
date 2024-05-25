@@ -15,9 +15,9 @@ def indexesfromregex(dic: list, regex: str) -> list:
 
 
 def getListFromIndex(meteo: dict, valuelist: str, indexlist: list) -> list:
-    res = []
+    res = {valuelist: []}
     for i in indexlist:
-        res.append((meteo["hourly"][valuelist][i], meteo["hourly"]["time"][i]))
+        res[valuelist].append({"value": meteo["hourly"][valuelist][i], "time": meteo["hourly"]["time"][i]})
     return res
 
 

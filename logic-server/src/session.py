@@ -19,9 +19,9 @@ class DataAgent:
     def get_services_description(self) -> str:
         return Path("services.json").read_text()
 
-    def invoke_service(self, service: str, arguments: dict) -> dict | list:
+    def invoke_service(self, service: str, arguments: dict) -> typing.Generator[str, None, None]:
         if service == "CLOCK":
-            return {"time": datetime.datetime.now().isoformat()}
+            yield str({"time": datetime.datetime.now().isoformat()})
         elif service == "NL2COORD":
             import nl2coord.nl_to_coord
 
@@ -33,12 +33,12 @@ class DataAgent:
 
             out = nl2coord.nl_to_coord.get_coords(desc)
             if out is None:
-                return {"error": "Koordinaten konnten nicht bestimmt werden."}
+                yield str({"error": "Koordinaten konnten nicht bestimmt werden."})
             else:
                 lat, lon = out
-                return {"lat": lat, "lon": lon}
+                yield str({"lat": lat, "lon": lon})
 
-        elif service == "COARSE_TEMPERATURE":
+        elif service == "GENERAL_WEATHER":
             import dwd_forecast
 
             try:
@@ -50,7 +50,7 @@ class DataAgent:
                 raise InvalidApiCall(
                     'Der API-Aufruf muss die Argumente \'lat\', \'lon\', \'date\' und \'attribute\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
-            return dwd_forecast.get_weather_forcast(lon, lat, day, attribute)
+            yield str(dwd_forecast.get_weather_forcast(lon, lat, day, attribute))
         elif service == "KLIPS_DRESDEN":
             import klips_json
 
@@ -71,15 +71,15 @@ class DataAgent:
                 utc_tz = pytz.timezone("UTC")
                 date = local_tz.localize(date).astimezone(utc_tz).replace(tzinfo=None).isoformat()
 
-                return [
+                yield str([
                     (
                         utc_tz.localize(d).astimezone(local_tz).replace(tzinfo=None).isoformat(),
                         temp
                     ) for d, temp in klips_json.request((lat, lon), date)
-                ]
+                ])
             except Exception as e:
                 # raise
-                return {"error": str(e)}
+                yield str({"error": str(e)})
         elif service == "HITZE_HANDBUCH":
             try:
                 prompt = arguments["prompt"]
@@ -88,17 +88,17 @@ class DataAgent:
                     'Der API-Aufruf muss die Argumente \'prompt\', enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
             try:
                 from heat_tips_retrieval.file_retrieval import retrieve_from_file
-                return retrieve_from_file(None,None,prompt, False)
+                yield from retrieve_from_file(None, prompt)
             except Exception as e:
                 # raise
-                return {"error": str(e)}
-
-
+                yield str({"error": str(e)})
         else:
-            return {"error": f"Unknown service {service}"}
+            yield str({"error": f"Unknown service {service}"})
 
 
 class DialogAgent(abc.ABC):
+    messages: list[Message]
+
     @abc.abstractmethod
     def add_message(self, message: str, role: typing.Literal["user", "system"]):
         ...
@@ -107,9 +107,6 @@ class DialogAgent(abc.ABC):
     def get_response(self) -> str:
         ...
 
-    @abc.abstractmethod
-    def remove_last_message(self):
-        ...
 
 
 @dataclasses.dataclass
@@ -153,9 +150,6 @@ class OpenAiDialogAgent(DialogAgent):
 
         self.add_message("".join(chunks), "system")
 
-    def remove_last_message(self):
-        self.messages.pop()
-
 
 class InvalidApiCall(Exception):
     ...
@@ -192,7 +186,7 @@ class Session:
                         parsed = json.loads(potential_json)
                     except (KeyError, json.JSONDecodeError) as e:
                         # raise InvalidApiCall("Du musst valides JSON angeben!") from e
-                        self.dialog_agent.remove_last_message()
+                        self.dialog_agent.messages.pop()
                         continue
 
                     try:
@@ -202,10 +196,10 @@ class Session:
                         raise InvalidApiCall("Der API-Aufruf muss die Schlüssel 'service' und 'args' enthalten!") from e
 
                     else:
-                        result = self.data_agent.invoke_service(service, args)
+                        result = "".join(self.data_agent.invoke_service(service, args))
 
                         self.dialog_agent.add_message(
-                            message="OUT " + json.dumps(result, ensure_ascii=False),
+                            message=json.dumps(result, ensure_ascii=False),
                             role="system"
                         )
             except InvalidApiCall as e:
@@ -228,6 +222,7 @@ def create_session() -> Session:
     - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu beginn deiner Nachricht. Schreibe keinen Text davor.
     - Frage NIEMALS, ob du spezifische APIs nutzen sollst. sondern NUTZE SIE. Stelle keine Behauptungen auf, ohne Anfragen gestellt zu haben.
     - Falls kein Datum angegeben wurde, nimm heute an.
+    - Nenne NIEMALS APIs beim Namen.
     """)
 
     dialog_agent = OpenAiDialogAgent(

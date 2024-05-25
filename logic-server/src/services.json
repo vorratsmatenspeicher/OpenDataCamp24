@@ -10,7 +10,7 @@
     },
     {
       "name": "NL2COORD",
-      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate. Dazu zählen auch Schnittpunkte von Straßen.",
+      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate. Z. B. 'Hauptstraße Ecke Albertplatz', 'Der Netto neben der HTW'",
       "args": {
         "description": "Beschreibung des Orts"
       },
@@ -20,8 +20,8 @@
       }
     },
     {
-      "name": "COARSE_TEMPERATURE",
-      "description": "Gibt den Temperaturverlauf eines Tages für einen bestimmten Ort zurück.",
+      "name": "GENERAL_WEATHER",
+      "description": "Gibt den Wetterdaten zu einem Tag für einen bestimmten Ort zurück.",
       "args": {
         "date": "Datum im Format YYYY-MM-TT",
         "lat": "Breitengrad",

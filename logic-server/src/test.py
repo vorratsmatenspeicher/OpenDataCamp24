@@ -21,8 +21,9 @@ def main():
         it = s.get_response(prompt)
 
         for token in it:
-            print("TOKEN", token)
+            print(token, end="")
 
+        print()
 
 if __name__ == "__main__":
     main()

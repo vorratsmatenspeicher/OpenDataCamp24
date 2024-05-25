@@ -6,14 +6,14 @@ import session
 def main():
     import logging
 
-    # logging.basicConfig(
-    #     level=logging.INFO,
-    #     format='%(asctime)s %(levelname)s:%(message)s',
-    #     handlers=[
-    #         logging.FileHandler("app.log"),
-    #         logging.StreamHandler(sys.stdout)
-    #     ]
-    # )
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s:%(message)s',
+        handlers=[
+            logging.FileHandler("app.log"),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
 
     s = session.create_session()
     prompt = "Begrüße einen neuen Benutzer."
@@ -27,6 +27,7 @@ def main():
 
         print()
         prompt = input(" --> ")
+
 
 if __name__ == "__main__":
     main()

@@ -196,7 +196,7 @@ class Session:
                         raise InvalidApiCall("Der API-Aufruf muss die Schlüssel 'service' und 'args' enthalten!") from e
 
                     else:
-                        result = "".join(self.data_agent.invoke_service(service, args))
+                        result = "OUT" + "".join(self.data_agent.invoke_service(service, args))
 
                         self.dialog_agent.add_message(
                             message=json.dumps(result, ensure_ascii=False),
@@ -223,6 +223,7 @@ def create_session() -> Session:
     - Frage NIEMALS, ob du spezifische APIs nutzen sollst. sondern NUTZE SIE. Stelle keine Behauptungen auf, ohne Anfragen gestellt zu haben.
     - Falls kein Datum angegeben wurde, nimm heute an.
     - Nenne NIEMALS APIs beim Namen.
+    - Nachrichten, die mit OUT beginnen, sind API-Antworten.
     """)
 
     dialog_agent = OpenAiDialogAgent(

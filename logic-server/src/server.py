@@ -1,55 +1,26 @@
-import logging
-import sys
-import openai
-from flask import Flask, request
-
 import session
 
-app = Flask(__name__)
-
-# Set up logging to capture all output including print statements
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s %(levelname)s:%(message)s',
-    handlers=[
-        logging.FileHandler("app.log"),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-
-SESSIONS: dict[str, session.Session] = {}
+import asyncio
+from websockets.server import serve
 
 
-@app.route("/create_session")
-def create_session():
-    i = 0
-    while f"session_{i}" in SESSIONS:
-        i += 1
+async def chat(websocket):
+    s = session.create_session()
 
-    SESSIONS[f"session_{i}"] = session.create_session()
+    async for message in websocket:
+        print(f"Received message: {message!r}")
+        for token in s.get_response(message):
+            if token:
+                await asyncio.sleep(0.05)
+                await websocket.send(token)
 
-    return {"session_id": f"session_{i}"}
-
-
-def error(message: str):
-    return {"error": message}
+        await websocket.send("")
 
 
-@app.route("/get_response")
-def get_response():
-    if "session_id" not in request.args:
-        return error("session_id is required")
-
-    if "prompt" not in request.args:
-        return error("prompt is required")
-
-    session_id = request.args["session_id"]
-
-    if session_id not in SESSIONS:
-        return error("Invalid session_id")
-
-    return {"response": SESSIONS[session_id].get_response(request.args["prompt"])}
+async def main():
+    print("Server started")
+    async with serve(chat, "0.0.0.0", 5000):
+        await asyncio.Future()  # run forever
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000, host="0.0.0.0")
+asyncio.run(main())

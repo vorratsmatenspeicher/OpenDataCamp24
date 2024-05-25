@@ -132,7 +132,7 @@ class OpenAiDialogAgent(DialogAgent):
             logging.getLogger("DialogAgent").info(f"USR> {message}")
         self.messages.append(Message(role, message))
 
-    def get_response(self) -> str:
+    def get_response(self) -> typing.Generator[str, None, None]:
         messages_serialized = [
             {"role": message.role, "content": message.content}
             for message in self.messages
@@ -141,13 +141,17 @@ class OpenAiDialogAgent(DialogAgent):
         # noinspection PyTypeChecker
         response = self.openai_client.chat.completions.create(
             model=self.model,
-            messages=messages_serialized
+            messages=messages_serialized,
+            stream=True
         )
 
-        msg = response.choices[0].message
-        self.add_message(msg.content, "system")
+        chunks = []
+        for chunk in response:
+            if chunk.choices[0].delta.content is not None:
+                chunks.append(chunk.choices[0].delta.content)
+                yield chunk.choices[0].delta.content
 
-        return msg.content
+        self.add_message("".join(chunks), "system")
 
     def remove_last_message(self):
         self.messages.pop()
@@ -162,10 +166,8 @@ class Session:
     data_agent: DataAgent
     dialog_agent: DialogAgent
 
-    def get_response(self, prompt: str) -> str:
+    def get_response(self, prompt: str) -> typing.Generator[str, None, None]:
         self.dialog_agent.add_message(prompt, "user")
-
-        out_messages = []
 
         for i in range(10):
             try:
@@ -173,16 +175,18 @@ class Session:
                     response = '{"service": "CLOCK", "args": {}}'
                     self.dialog_agent.add_message(response, "user")
                 else:
-                    response = self.dialog_agent.get_response().strip()
+                    response_iterator = self.dialog_agent.get_response()
+                    for token in response_iterator:
+                        if "{" not in token:
+                            yield token
+                        else:
+                            up_to, after = token.split("{", 1)
+                            yield up_to
+                            break
+                    else:
+                        break
 
-                if "{" in response:
-                    message, potential_json = response.split("{", 1)
-                    potential_json = "{" + potential_json
-                    potential_json = potential_json.strip("`").strip()
-
-                    message = message.strip()
-                    if message:
-                        out_messages.append(message)
+                    potential_json = ("{" + after + "".join(response_iterator)).strip("`").strip()
 
                     try:
                         parsed = json.loads(potential_json)
@@ -204,13 +208,8 @@ class Session:
                             message="OUT " + json.dumps(result, ensure_ascii=False),
                             role="system"
                         )
-                else:
-                    out_messages.append(response)
-                    break
             except InvalidApiCall as e:
                 self.dialog_agent.add_message(str(e), "system")
-
-        return "\n\n".join(out_messages)
 
 
 def create_session() -> Session:

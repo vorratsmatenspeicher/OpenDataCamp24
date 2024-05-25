@@ -1,5 +1,5 @@
 class AudioRecorder {
-  private mediaRecorder: MediaRecorder;
+  // private mediaRecorder: MediaRecorder;
   private chunks: Blob[] = [];
 
   constructor() {
@@ -20,13 +20,13 @@ class AudioRecorder {
 
   stopRecording() {
     // Stop recording audio
-    this.mediaRecorder.stop();
+    // this.mediaRecorder.stop();
   }
 
-  getAudioBlob() {
-    // Get the recorded audio as a Blob
-    return new Blob(this.chunks, { type: this.mediaRecorder.mimeType });
-  }
+  // getAudioBlob() {
+  //   // Get the recorded audio as a Blob
+  //   return new Blob(this.chunks, { type: this.mediaRecorder.mimeType });
+  // }
 }
 
 export default AudioRecorder

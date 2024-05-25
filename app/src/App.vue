@@ -64,6 +64,8 @@ main {
   text-align: center;
   width: 80%;
   font-size: 4rem;
+  margin-left: auto;
+  margin-right: auto;
   line-height: 1.2;
 }
 

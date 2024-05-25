@@ -21,7 +21,9 @@ async def chat(websocket):
     s = session.create_session()
 
     for token in s.get_response("Begrüße einen neuen Benutzer.", "system"):
-        await websocket.send(token)
+        if not token:
+            await websocket.send(token)
+    await websocket.send("")
 
     async for message in websocket:
         print(f"Received message: {message!r}")

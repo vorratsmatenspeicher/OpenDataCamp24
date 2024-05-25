@@ -9,6 +9,9 @@ import typing
 from pathlib import Path
 
 import openai
+import dotenv
+
+dotenv.load_dotenv()
 
 
 class DataAgent:
@@ -103,3 +106,43 @@ class Session:
             return self.dialog_agent.get_response()
         else:
             return response
+
+
+def create_session() -> Session:
+    data_agent = DataAgent()
+
+    system_prompt = textwrap.dedent(f"""
+    Verhalte dich wie ein Berater zum Thema Bewältigung und Umgang mit Hitze. Gib konkrete Handlungsempfehlungen auf Anfragen. Nutze folgende APIs, um deine Anfragen mit spezifischen Daten zu füllen.
+    Um eine API auszuführen, antworte NUR mit dem Namen der API sowie den Argumenten in JSON-Form. Beende danach deine Antwort. Frage keine APIs, an wenn der Benutzer nicht nach relevaten Informationen gefragt hat. Folgende APIs stehen dir zur Verfügung:
+    {data_agent.get_services_description()}
+    Es folgen Beispiele für die API-Aufrufe:
+    """)
+
+    hints = textwrap.dedent("""
+    Folge Dinge sind zu beachten:
+    - Befrage die CLOCK-API JEDES MAL, wenn dich der Benutzer nach einer Uhrzeit fragt. Benutze NIEMALS Rückgaben der CLOCK-API, die älter sind als eine Anfrage des Benutzers.
+    """)
+
+    dialog_agent = OpenAiDialogAgent(
+        openai_client=openai.Client(),
+        messages=[
+            Message(
+                role="system",
+                content=system_prompt
+            ),
+            Message(
+                role="system",
+                content='{"service": "CLOCK", args: {}}'
+            ),
+            Message(
+                role="system",
+                content=str(data_agent.invoke_service("CLOCK", {}))
+            ),
+            Message(
+                role="system",
+                content=hints
+            )
+        ]
+    )
+
+    return Session(data_agent, dialog_agent)

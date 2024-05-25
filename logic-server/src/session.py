@@ -21,6 +21,18 @@ class DataAgent:
     def invoke_service(self, service: str, arguments: dict) -> dict:
         if service == "CLOCK":
             return {"time": datetime.datetime.now().isoformat()}
+        elif service == "NL2COORD":
+            import nl2coord.nl_to_coord
+
+            try:
+                desc = arguments["description"]
+            except KeyError as e:
+                raise InvalidApiCall('Der API-Aufruf muss das Argument \'description\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+
+            lat, lon = nl2coord.nl_to_coord.get_coords(desc)
+
+            return {"lat": lat, "lon": lon}
+
         else:
             return {"error": f"Unknown service {service}"}
 
@@ -109,8 +121,6 @@ class Session:
                             message=json.dumps(result, ensure_ascii=False),
                             role="system"
                         )
-
-                    return self.dialog_agent.get_response()
                 else:
                     return response
             except InvalidApiCall as e:
@@ -125,7 +135,7 @@ def create_session() -> Session:
     Um eine API auszuführen, antworte NUR mit dem Namen der API sowie den Argumenten in JSON-Form. Beende danach deine Antwort. Frage keine APIs, an wenn der Benutzer nicht nach relevaten Informationen gefragt hat. Folgende APIs stehen dir zur Verfügung:
     {data_agent.get_services_description()}
     Es folgen Beispiele für die API-Aufrufe:
-    """)
+    """ + '{"service": "CLOCK", args: {}}')
 
     hints = textwrap.dedent("""
     Folge Dinge sind zu beachten:
@@ -138,10 +148,6 @@ def create_session() -> Session:
             Message(
                 role="system",
                 content=system_prompt
-            ),
-            Message(
-                role="system",
-                content='{"service": "CLOCK", args: {}}'
             ),
             Message(
                 role="system",

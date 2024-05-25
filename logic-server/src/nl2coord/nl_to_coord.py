@@ -1,8 +1,8 @@
 import json
 import hashlib
 import os
-from osm_requests import get_bounding_boxes
-from coord_intersection import find_first_intersection
+from .osm_requests import get_bounding_boxes
+from .coord_intersection import find_first_intersection
 
 CACHE_DIR = 'cache'
 

@@ -60,9 +60,12 @@ class DataAgent:
                 date = arguments["datetime"]
             except KeyError as e:
                 raise InvalidApiCall(
-                    'Der API-Aufruf muss die Argumente \'lat\', \'lon\' und \'date\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+                    'Der API-Aufruf muss die Argumente \'lat\', \'lon\' und \'datetime\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
-            return klips_json.request((lat, lon), date)
+            try:
+                return klips_json.request((lat, lon), date)
+            except Exception as e:
+                return {"error": str(e)}
 
         else:
             return {"error": f"Unknown service {service}"}

@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Set up logging to capture all output including print statements
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s %(levelname)s:%(message)s',
     handlers=[
         logging.FileHandler("app.log"),

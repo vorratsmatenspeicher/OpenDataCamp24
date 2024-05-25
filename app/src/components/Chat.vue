@@ -99,8 +99,8 @@ onMounted(() => {
           <span class="chat-message__inner" v-html="msg.message"></span>
         </div>
 
-        <div class="chat-message--bot" v-if="inProgress">
-          <span class="chat-message">
+        <div class="chat-message chat-message--bot loading" v-if="inProgress">
+          <span class="chat-message__inner">
             <div class="loader"></div>
           </span>
         </div>
@@ -176,6 +176,10 @@ onMounted(() => {
 
 .chat-message :deep(strong) {
   font-weight: 600;
+}
+
+.chat-message.loading .chat-message__inner {
+  text-align: center;
 }
 
 .chat-input {

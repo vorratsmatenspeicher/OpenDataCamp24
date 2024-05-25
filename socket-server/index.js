@@ -38,32 +38,58 @@ app.listen(port, () => {
 // Create a WebSocket server
 const wss = new WebSocket.Server({ port: 5000 });
 
+// const socketClient = socketIOClient.io('ws://141.56.56.77:5000/chat')
+
+// socketClient.on('connect', () => {
+// 	console.log('Connected to socket service');
+// })
+
 // Event listener for new connections
 wss.on('connection', (ws) => {
+	const socketService = new WebSocket('ws://logic:5000')
 
-	fetch('http://logic:5000/create_session').then((res) => {
-		res.json().then((data) => {
-			console.log('Session created', data);
-			ws.send(JSON.stringify({
-				type: 'session',
-				data: data.session_id
-			}));
-		});
-	})
+	socketService.onopen = () => {
+		console.log('Connected to socket service');
+
+		ws.send(JSON.stringify({
+			type: 'session'
+		}));
+	}
+
+	socketService.onmessage = (message) => {
+		console.log('Connected to socket service', message.data);
+
+		ws.send(JSON.stringify({
+			type: 'message',
+			data: message.data
+		}));
+	}
+
+	// fetch('http://logic:5000/create_session').then((res) => {
+	// 	res.json().then((data) => {
+	// 		console.log('Session created', data);
+	// 		ws.send(JSON.stringify({
+	// 			type: 'session',
+	// 			data: data.session_id
+	// 		}));
+	// 	});
+	// })
 
 	// Event listener for incoming messages
 	ws.on('message', (data) => {
 		const { session_id, prompt } = JSON.parse(data.toString())
 
-		fetch(`http://logic:5000/get_response?prompt=${ prompt }&session_id=${ session_id }`).then((res) => {
-			res.json().then((body) => {
-				console.log('Response received', body);
-				ws.send(JSON.stringify({
-					type: 'message',
-					data: body.response
-				}));
-			});
-		})
+		socketService.send(prompt)
+
+		// fetch(`http://logic:5000/get_response?prompt=${ prompt }&session_id=${ session_id }`).then((res) => {
+		// 	res.json().then((body) => {
+		// 		console.log('Response received', body);
+		// 		ws.send(JSON.stringify({
+		// 			type: 'message',
+		// 			data: body.response
+		// 		}));
+		// 	});
+		// })
 
 		// Send a response back to the client
 		// ws.send(JSON.stringify({

@@ -42,7 +42,13 @@ function handleMessageSend(event: MessageEvent) {
   inProgress.value = false;
 
   if(socketMsg.type === 'message') {
-    messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data) });
+    if(messages.value[messages.value.length - 1].owner === 'self') {
+      messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data) });
+    } else {
+      messages.value[messages.value.length - 1].message = marked.parseInline(messages.value[messages.value.length - 1].message + socketMsg.data);
+    }
+
+    // messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data) });
 
     console.log(chatMessagesEleInner.value.scrollHeight);
 
@@ -54,7 +60,7 @@ function handleMessageSend(event: MessageEvent) {
   }
 
   if(socketMsg.type === 'session') {
-    session.value = socketMsg.data;
+    // session.value = socketMsg.data;
     return;
   }
   console.log('event', event.data);
@@ -142,7 +148,7 @@ onMounted(() => {
 }
 
 .chat-message--bot {
-  text-align: right;
+  text-align: left;
 
   span {
     color: #080D21;

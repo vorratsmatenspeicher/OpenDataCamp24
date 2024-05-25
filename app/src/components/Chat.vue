@@ -6,11 +6,16 @@ import WebSocketService from '../services/socket';
 
 const socket: Ref<WebSocketService|null> = ref(null);
 
+const session = ref('');
+
 const chatMessagesEle = ref()
 const message = ref('');
 const messages = ref<{ owner: 'bot'|'self', message: any }[]>([]);
 const sendMessage = () => {
-  socket.value?.send(message.value);
+  socket.value?.send(JSON.stringify({
+    session_id: session.value,
+    prompt: message.value
+  }));
 
   messages.value.push({ owner: 'self', message: message.value });
 
@@ -22,8 +27,18 @@ function handleOpenMessage() {
 }
 
 function handleMessageSend(event: MessageEvent) {
+  const socketMsg = JSON.parse(event.data);
+  if(socketMsg.type === 'message') {
+    messages.value.push({ owner: 'bot', message: socketMsg.data });
+    return;
+  }
+
+  if(socketMsg.type === 'session') {
+    session.value = socketMsg.data;
+    return;
+  }
   console.log('event', event.data);
-  messages.value.push({ owner: 'bot', message: event.data });
+  // messages.value.push({ owner: 'bot', message: event.data });
 }
 
 onMounted(() => {

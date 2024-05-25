@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import PhoneIcon from './components/Icons/Phone.vue'
+import ChatbotIcon from './components/Icons/Chatbot.vue'
 import Chat from './components/Chat.vue'
 
 const openCall = ref(false)
@@ -13,9 +13,11 @@ const openCall = ref(false)
 
   <main>
     <div v-if="!openCall">
-      <button class="button" @click="openCall = true">
-        <PhoneIcon class="icon" />
-      </button>
+      <transition name="fade" appear>
+        <button class="button" @click="openCall = true">
+          <ChatbotIcon class="icon" />
+        </button>
+      </transition>
     </div>
     <div v-else>
       <Chat />
@@ -45,5 +47,15 @@ main {
 .icon {
   color: white;
   width: 2rem;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -224,6 +224,7 @@ def create_session() -> Session:
     - Falls kein Datum angegeben wurde, nimm heute an.
     - Nenne NIEMALS APIs beim Namen.
     - Vermeide Wiederholungen
+    - Benutze stets die Höflichkeitsanrede, außer dir wird das Du angeboten.
     """)
 
     dialog_agent = OpenAiDialogAgent(

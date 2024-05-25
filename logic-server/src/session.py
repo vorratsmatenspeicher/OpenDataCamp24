@@ -47,6 +47,18 @@ class DataAgent:
                     'Der API-Aufruf muss die Argumente \'lat\', \'lon\', \'date\' und \'attribute\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
             return dwd_forecast.get_weather_forcast(lon, lat, day, attribute)
+        elif service == "KLIPS_DRESDEN":
+            import klips_json
+
+            try:
+                lat = arguments["lat"]
+                lon = arguments["lon"]
+                date = arguments["datetime"]
+            except KeyError as e:
+                raise InvalidApiCall(
+                    'Der API-Aufruf muss die Argumente \'lat\', \'lon\' und \'date\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+
+            return klips_json.request((lat, lon), date)
 
         else:
             return {"error": f"Unknown service {service}"}
@@ -114,9 +126,13 @@ class Session:
 
         out_messages = []
 
-        while True:
+        for i in range(10):
             try:
-                response = self.dialog_agent.get_response().strip()
+                if i == 0:
+                    response = '{"service": "CLOCK", "args": {}}'
+                    self.dialog_agent.add_message(response, "user")
+                else:
+                    response = self.dialog_agent.get_response().strip()
 
                 if "{" in response:
                     message, potential_json = response.split("{", 1)
@@ -142,7 +158,7 @@ class Session:
                         result = self.data_agent.invoke_service(service, args)
 
                         self.dialog_agent.add_message(
-                            message=json.dumps(result, ensure_ascii=False),
+                            message="OUT " + json.dumps(result, ensure_ascii=False),
                             role="system"
                         )
                 else:
@@ -166,7 +182,6 @@ def create_session() -> Session:
 
     hints = textwrap.dedent("""
     Folge Dinge sind zu beachten:
-    - Befrage die CLOCK-API JEDES MAL, wenn dich der Benutzer nach einer Uhrzeit fragt. Benutze NIEMALS Rückgaben der CLOCK-API, die älter sind als eine Anfrage des Benutzers.
     - Gib knappe, aber präzise Antworten, als würdest du ein Telefongespräch führen.
     - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu beginn deiner Nachricht. Schreibe keinen Text davor.
     - Frage NIEMALS, ob du spezifische APIs nutzen sollst. sondern NUTZE SIE. Stelle keine Behauptungen auf, ohne Anfragen gestellt zu haben.
@@ -182,7 +197,7 @@ def create_session() -> Session:
             ),
             Message(
                 role="system",
-                content=str(data_agent.invoke_service("CLOCK", {}))
+                content="OUT " + str(data_agent.invoke_service("CLOCK", {}))
             ),
             Message(
                 role="system",

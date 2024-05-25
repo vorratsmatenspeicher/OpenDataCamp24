@@ -15,6 +15,7 @@ services:
     image: node:20
     working_dir: /usr/src/app
     command: ["node", "index.js"]
+    # command: ["npm", "run", "dev"]
     ports:
       - "5002:8080"
     volumes:

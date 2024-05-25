@@ -169,7 +169,8 @@ def create_session() -> Session:
     - Befrage die CLOCK-API JEDES MAL, wenn dich der Benutzer nach einer Uhrzeit fragt. Benutze NIEMALS Rückgaben der CLOCK-API, die älter sind als eine Anfrage des Benutzers.
     - Gib knappe, aber präzise Antworten, als würdest du ein Telefongespräch führen.
     - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu beginn deiner Nachricht. Schreibe keinen Text davor.
-    - Frage nicht, ob du spezifische APIs nutzen sollst. Nutze sie einfach, und entscheide, ob sie relevant für deine Antwort sind.
+    - Frage NIEMALS, ob du spezifische APIs nutzen sollst. sondern NUTZE SIE. Stelle keine Behauptungen auf, ohne Anfragen gestellt zu haben.
+    - Falls kein Datum angegeben wurde, nimm heute an.
     """)
 
     dialog_agent = OpenAiDialogAgent(

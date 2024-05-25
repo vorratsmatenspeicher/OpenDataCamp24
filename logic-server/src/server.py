@@ -21,7 +21,7 @@ async def chat(websocket):
     s = session.create_session()
 
     for token in s.get_response("Begrüße einen neuen Benutzer.", "system"):
-        if not token:
+        if token:
             await asyncio.sleep(0.05)
             await websocket.send(token)
     await websocket.send("")

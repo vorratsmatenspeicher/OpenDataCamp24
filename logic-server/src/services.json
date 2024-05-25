@@ -1,6 +1,5 @@
 {
   "services": [
-
     {
       "name": "CLOCK",
       "description": "Gibt das aktuelle Datum und die aktuelle Uhrzeit zurück.",
@@ -11,7 +10,7 @@
     },
     {
       "name": "NL2COORD",
-      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate.",
+      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate. Dazu zählen auch Schnittpunkte von Straßen.",
       "args": {
         "description": "Beschreibung des Orts"
       },

@@ -30,9 +30,12 @@ class DataAgent:
                 raise InvalidApiCall(
                     'Der API-Aufruf muss das Argument \'description\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
-            lat, lon = nl2coord.nl_to_coord.get_coords(desc)
-
-            return {"lat": lat, "lon": lon}
+            out = nl2coord.nl_to_coord.get_coords(desc)
+            if out is None:
+                return {"error": "Koordinaten konnten nicht bestimmt werden."}
+            else:
+                lat, lon = out
+                return {"lat": lat, "lon": lon}
 
         elif service == "COARSE_TEMPERATURE":
             import dwd_forecast

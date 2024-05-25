@@ -29,6 +29,15 @@
         "lon": "Längengrad",
         "attribute": "\"temperature\" oder \"felt_temp\""
       }
+    },
+    {
+      "name": "KLIPS_DRESDEN",
+      "description": "Gibt genaue Prognosen für die Temperatur innerhalb der Stadt Dresden zurück. (+/- 2h)",
+        "args": {
+          "datetime": "Datum im Format YYYY-TT-MM HH:MM:SS",
+          "lat": "Breitengrad",
+          "lon": "Längengrad"
+        }
     }
   ]
 }

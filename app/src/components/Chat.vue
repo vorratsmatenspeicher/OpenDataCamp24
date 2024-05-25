@@ -2,6 +2,7 @@
 <script lang="ts" setup>
 import { ref, type Ref, onMounted } from 'vue';
 
+// import AudioRecorder from './AudioRecorder.vue';
 import WebSocketService from '../services/socket';
 
 const socket: Ref<WebSocketService|null> = ref(null);
@@ -78,6 +79,7 @@ onMounted(() => {
     <div class="chat-input">
       <input type="text" v-model="message" @keyup.enter="sendMessage" placeholder="Type your message...">
       <button @click="sendMessage">Send</button>
+      <!-- <audio-recorder /> -->
     </div>
   </div>
 </template>

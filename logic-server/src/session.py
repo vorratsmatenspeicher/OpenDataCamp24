@@ -44,7 +44,7 @@ class Message:
 @dataclasses.dataclass
 class OpenAiDialogAgent(DialogAgent):
     openai_client: openai.Client
-    model: str = "gpt-3.5-turbo"
+    model: str = "gpt-4o"
 
     messages: list[Message] = dataclasses.field(default_factory=list)
 
@@ -73,7 +73,8 @@ class OpenAiDialogAgent(DialogAgent):
         return msg.content
 
 
-datetime.datetime.strptime("2024-05-01 06:00:00", "%Y-%m-%d %H:%M:%S") - datetime.timedelta(hours=2)
+class InvalidApiCall(Exception):
+    ...
 
 
 @dataclasses.dataclass
@@ -83,29 +84,37 @@ class Session:
 
     def get_response(self, prompt: str) -> str:
         self.dialog_agent.add_message(prompt, "user")
-        response = self.dialog_agent.get_response().strip()
 
-        if "{" in response:
-            potential_json = response[response.index("{"):]
-            print("LLM responded with service call...", potential_json)
+        while True:
             try:
-                parsed = json.loads(potential_json)
+                response = self.dialog_agent.get_response().strip()
 
-                service = parsed["service"]
-                args = parsed["args"]
-            except (KeyError, json.JSONDecodeError):
-                return f"Invalid service call {response}"
-            else:
-                result = self.data_agent.invoke_service(service, args)
+                if "{" in response:
+                    potential_json = response[response.index("{"):].strip("`")
+                    try:
+                        parsed = json.loads(potential_json)
+                    except (KeyError, json.JSONDecodeError) as e:
+                        raise InvalidApiCall("Du musst valides JSON angeben!") from e
 
-                self.dialog_agent.add_message(
-                    message=json.dumps(result, ensure_ascii=False),
-                    role="system"
-                )
+                    try:
+                        service = parsed["service"]
+                        args = parsed["args"]
+                    except KeyError as e:
+                        raise InvalidApiCall("Der API-Aufruf muss die Schlüssel 'service' und 'args' enthalten!") from e
 
-            return self.dialog_agent.get_response()
-        else:
-            return response
+                    else:
+                        result = self.data_agent.invoke_service(service, args)
+
+                        self.dialog_agent.add_message(
+                            message=json.dumps(result, ensure_ascii=False),
+                            role="system"
+                        )
+
+                    return self.dialog_agent.get_response()
+                else:
+                    return response
+            except InvalidApiCall as e:
+                self.dialog_agent.add_message(str(e), "system")
 
 
 def create_session() -> Session:

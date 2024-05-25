@@ -21,7 +21,7 @@
       }
     },
     {
-      "name": "NL2CORD",
+      "name": "NL2COORD",
       "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate.",
       "args": {
         "description": "Beschreibung des Orts"

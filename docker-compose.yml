@@ -5,16 +5,11 @@ services:
       - "5001:5000"
     restart: unless-stopped
 
-  # app:
-  #   image: node:20
-  #   working_dir: /usr/src/app
-  #   command: ["npm", "start"]
-  #   ports:
-  #     - "80:3000"
-  #   volumes:
-  #     - ./app:/usr/src/app
-  #     - /app/node_modules
-  #   restart: unless-stopped
+  app:
+    build: ./app
+    ports:
+      - "8080:80"
+    restart: unless-stopped
 
   socket:
     image: node:20

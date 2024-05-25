@@ -4,6 +4,7 @@ import abc
 import dataclasses
 import datetime
 import json
+import logging
 import textwrap
 import typing
 from pathlib import Path
@@ -76,6 +77,10 @@ class DialogAgent(abc.ABC):
     def get_response(self) -> str:
         ...
 
+    @abc.abstractmethod
+    def remove_last_message(self):
+        ...
+
 
 @dataclasses.dataclass
 class Message:
@@ -92,9 +97,9 @@ class OpenAiDialogAgent(DialogAgent):
 
     def add_message(self, message: str, role: str):
         if role == "system":
-            print(f"SYS> {message}")
+            logging.getLogger("DialogAgent").info(f"SYS> {message}")
         elif role == "user":
-            print(f"USR> {message}")
+            logging.getLogger("DialogAgent").info(f"USR> {message}")
         self.messages.append(Message(role, message))
 
     def get_response(self) -> str:
@@ -113,6 +118,9 @@ class OpenAiDialogAgent(DialogAgent):
         self.add_message(msg.content, "system")
 
         return msg.content
+
+    def remove_last_message(self):
+        self.messages.pop()
 
 
 class InvalidApiCall(Exception):
@@ -149,7 +157,9 @@ class Session:
                     try:
                         parsed = json.loads(potential_json)
                     except (KeyError, json.JSONDecodeError) as e:
-                        raise InvalidApiCall("Du musst valides JSON angeben!") from e
+                        # raise InvalidApiCall("Du musst valides JSON angeben!") from e
+                        self.dialog_agent.remove_last_message()
+                        continue
 
                     try:
                         service = parsed["service"]

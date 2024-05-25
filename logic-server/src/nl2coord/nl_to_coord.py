@@ -89,7 +89,7 @@ def getCoords(query):
     if results:
         first = results[0]
         if 'lat' in first and 'lon' in first:
-            return(first['lat'], first['lon'])
+            return float(first['lat']), float(first['lon'])
     else:
         print(f"Cannot find location for {query}")
     return None

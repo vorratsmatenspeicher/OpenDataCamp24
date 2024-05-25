@@ -21,7 +21,7 @@ def main():
         it = s.get_response(prompt)
 
         for token in it:
-            print(token, end="")
+            print(token, end="", flush=True)
 
         print()
 

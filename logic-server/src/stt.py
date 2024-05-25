@@ -11,6 +11,7 @@ def audio_callback(indata, frames, time, status):
 
 def recognize_speech(stop_event):
     # Load the German model
+    https://alphacephei.com/vosk/models
     #model = Model("models/vosk-model-small-de-0.15")
     model = Model("../vosk-model-small-de-0.15")
     recognizer = KaldiRecognizer(model, 16000)

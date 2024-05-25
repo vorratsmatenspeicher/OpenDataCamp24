@@ -35,7 +35,7 @@ const sendMessage = () => {
 };
 
 function handleOpenMessage() {
-  messages.value.push({ owner: 'bot', message: 'Ist dir kalt?' });
+  // messages.value.push({ owner: 'bot', message: 'Ist dir kalt?' });
 
   inProgress.value = false;
 }
@@ -46,21 +46,16 @@ function handleMessageSend(event: MessageEvent) {
   inProgress.value = false;
 
   if(socketMsg.type === 'message') {
-    if(messages.value[messages.value.length - 1].owner === 'self') {
+    if(!socketMsg.data) return;
+    if(!messages.value.length || messages.value[messages.value.length - 1].owner === 'self') {
       messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data) });
     } else {
       messages.value[messages.value.length - 1].message = marked.parseInline(messages.value[messages.value.length - 1].message + socketMsg.data);
     }
 
-    // messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data) });
-
-    console.log(chatMessagesEleInner.value.scrollHeight);
-
     nextTick(() => {
       chatMessagesEleScroll.value.scrollTop = chatMessagesEleInner.value.scrollHeight;
     })
-
-    return;
   }
 
   if(socketMsg.type === 'session') {

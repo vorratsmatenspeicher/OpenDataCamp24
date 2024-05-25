@@ -3,12 +3,14 @@ import { ref, onMounted } from 'vue';
 
 import AudioRecorder from './../services/audio';
 
-const audioEle = ref<HTMLAudioElement|null>(null);
+const audioEle = ref<HTMLAudioElement>();
 
 function startRecording() {
   const recorder = new AudioRecorder();
 
-  recorder.startRecording().then((stream) => {
+  recorder.startRecording().then((stream: any) => {
+    if(!audioEle.value) return console.error('No audio element found')
+
     console.log('Stream', stream);
     audioEle.value.srcObject = stream;
   });

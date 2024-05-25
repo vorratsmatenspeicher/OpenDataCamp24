@@ -71,8 +71,14 @@ class DataAgent:
                 utc_tz = pytz.timezone("UTC")
                 date = local_tz.localize(date).astimezone(utc_tz).replace(tzinfo=None).isoformat()
 
-                return klips_json.request((lat, lon), date)
+                return [
+                    (
+                        utc_tz.localize(d).astimezone(local_tz).replace(tzinfo=None).isoformat(),
+                        temp
+                    ) for d, temp in klips_json.request((lat, lon), date)
+                ]
             except Exception as e:
+                # raise
                 return {"error": str(e)}
 
         else:

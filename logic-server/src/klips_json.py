@@ -13,7 +13,7 @@ def get_nearest_id(coord: tuple[float, float]) -> int:
         lat, lon = coord
         lat_closest, lon_closest = IDS[id]
 
-        dist = (lat - lat_closest) ** 2 + (lon - lon_closest) ** 2
+        dist = ((lat - lat_closest) ** 2 + (lon - lon_closest) ** 2)**0.5
 
         if dist > distMargin:
             raise ValueError("Closest data point is far away.")

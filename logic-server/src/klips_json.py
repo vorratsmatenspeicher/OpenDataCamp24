@@ -8,11 +8,16 @@ from urllib import parse
 
 def get_nearest_id(coord: tuple[float, float]) -> int:
     def dist_to(id: int) -> float:
-        a, b = coord
-        c, d = IDS[id]
+        lat, lon = coord
+        lat_closest, lon_closest = IDS[id]
 
-        return (a - c) ** 2 + (b - d) ** 2
+        dist = (lat - lat_closest) ** 2 + (lon - lon_closest) ** 2
 
+        if dist[0] > 0.02 or dist[1] > 0.02:
+            raise ValueError("Closest data point is far away.")
+
+        return dist
+        
     return min(IDS, key=dist_to)
 
 def get_weather(ids: int, date: str):

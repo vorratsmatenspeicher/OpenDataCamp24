@@ -1,9 +1,21 @@
+import logging
+import sys
 import openai
 from flask import Flask, request
 
 import session
 
 app = Flask(__name__)
+
+# Set up logging to capture all output including print statements
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s:%(message)s',
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 
 SESSIONS: dict[str, session.Session] = {}
 

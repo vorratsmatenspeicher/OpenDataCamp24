@@ -25,8 +25,9 @@ def get_nearest_id(coord: tuple[float, float]) -> int:
 def get_weather(ids: int, date: str):
     try:
         date = datetime.datetime.strptime(date, date_fmt)
-    except Exception:
-        print("WARNING: trouble converting string to date")
+    except Exception as e:
+        raise Exception("WARNING: trouble converting string to date") from e
+
     try:
         t_1 = datetime.datetime.strftime(date - datetime.timedelta(hours=2), date_fmt)
         t_2 = datetime.datetime.strftime(date + datetime.timedelta(hours=2), date_fmt)

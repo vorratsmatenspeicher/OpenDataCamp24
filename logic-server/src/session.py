@@ -63,6 +63,14 @@ class DataAgent:
                     'Der API-Aufruf muss die Argumente \'lat\', \'lon\' und \'datetime\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
             try:
+                date = datetime.datetime.fromisoformat(date)
+
+                # convert date from local time to UTC using pytz
+                import pytz
+                local_tz = pytz.timezone("Europe/Berlin")
+                utc_tz = pytz.timezone("UTC")
+                date = local_tz.localize(date).astimezone(utc_tz).replace(tzinfo=None).isoformat()
+
                 return klips_json.request((lat, lon), date)
             except Exception as e:
                 return {"error": str(e)}

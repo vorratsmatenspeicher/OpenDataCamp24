@@ -21,7 +21,7 @@ class DataAgent:
 
     def invoke_service(self, service: str, arguments: dict) -> typing.Generator[str, None, None]:
         if service == "CLOCK":
-            yield str({"time": datetime.datetime.now().isoformat()})
+            yield str({"time": datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")})
         elif service == "NL2COORD":
             import nl2coord.nl_to_coord
 
@@ -196,7 +196,7 @@ class Session:
                         raise InvalidApiCall("Der API-Aufruf muss die Schlüssel 'service' und 'args' enthalten!") from e
 
                     else:
-                        result = "OUT" + "".join(self.data_agent.invoke_service(service, args))
+                        result = "API-Antwort: " + "".join(self.data_agent.invoke_service(service, args))
 
                         self.dialog_agent.add_message(
                             message=json.dumps(result, ensure_ascii=False),
@@ -219,11 +219,11 @@ def create_session() -> Session:
     hints = textwrap.dedent("""
     Folge Dinge sind zu beachten:
     - Gib knappe, aber präzise Antworten, als würdest du ein Telefongespräch führen.
-    - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu beginn deiner Nachricht. Schreibe keinen Text davor.
+    - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu Beginn deiner Nachricht. Schreibe keinen Text davor.
     - Frage NIEMALS, ob du spezifische APIs nutzen sollst. sondern NUTZE SIE. Stelle keine Behauptungen auf, ohne Anfragen gestellt zu haben.
     - Falls kein Datum angegeben wurde, nimm heute an.
     - Nenne NIEMALS APIs beim Namen.
-    - Nachrichten, die mit OUT beginnen, sind API-Antworten.
+    - Vermeide Wiederholungen
     """)
 
     dialog_agent = OpenAiDialogAgent(
@@ -235,7 +235,7 @@ def create_session() -> Session:
             ),
             Message(
                 role="system",
-                content="OUT " + str(data_agent.invoke_service("CLOCK", {}))
+                content="API-Antwort: " + str(data_agent.invoke_service("CLOCK", {}))
             ),
             Message(
                 role="system",

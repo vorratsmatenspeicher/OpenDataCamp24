@@ -5,7 +5,7 @@
       "description": "Gibt das aktuelle Datum und die aktuelle Uhrzeit zurück.",
       "args": {},
       "returns": {
-        "time": "Datum und Uhrzeit"
+        "time": "Datum und Uhrzeit im Format TT.MM.JJJJ HH:MM:SS"
       }
     },
     {

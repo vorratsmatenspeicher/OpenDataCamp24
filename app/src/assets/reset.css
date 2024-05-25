@@ -1,0 +1,95 @@
+/* stylelint-disable selector-list-comma-newline-after */
+/*
+    @see https://www.joshwcomeau.com/css/custom-css-reset/
+    @see https://github.com/elad2412/the-new-css-reset
+*/
+/*
+    Remove all the styles of the "User-Agent-Stylesheet", except for the 'display' property
+    - The "symbol *" part is to solve Firefox SVG sprite bug
+    @see https://www.joshwcomeau.com/css/custom-css-reset/#digit-tweaking-line-height for the line-height
+*/
+:where( :not( iframe, canvas, img, svg, video ):not( svg *, symbol * ) ) {
+  all: unset;
+  display: revert;
+  line-height: var( --global-lineheight );
+}
+
+/*
+Use a more-intuitive box-sizing model.
+*/
+*, *::before, *::after {
+  box-sizing: border-box;
+  border: 0 solid transparent;
+}
+
+/* fix the feature of attribute hidden
+display:revert; revert to element instead of attribute */
+:where( [hidden] ){
+  display: none;
+}
+
+/*
+  Remove the margin on controls in Safari.
+  Remove built-in form typography styles
+*/
+:where( input, button, textarea, select, optgroup ) {
+  margin: 0;
+  font: inherit;
+}
+
+/*
+  Remove list styles (bullets/numbers)
+*/
+:where( ol, ul, menu ) {
+  list-style: none;
+  counter-reset: revert;
+}
+
+/*
+  Improve media defaults
+*/
+:where( img, picture, video, canvas, svg ):where( :not( svg.icon ) ) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/*
+  Always show scrollbar to prevent 'jumping' when pages transition (old school)
+  Prevent adjustments of font size after orientation changes in iOS.
+*/
+html {
+  overflow-y: initial;
+  -webkit-text-size-adjust: 100%;
+}
+
+/*
+  Provide always full screen
+*/
+html, body {
+  height: 100%;
+  overscroll-behavior-y: none;
+}
+
+/* remember to define focus styles! */
+/* the following line is already done by our main reset… */
+/* :focus:not( :focus-visible ) { outline: 0; } */
+html:focus-within { scroll-behavior: smooth; }
+
+/* stylelint-enable selector-list-comma-newline-after */
+
+/* stylelint-disable */
+/*
+  Remove all animations, transitions and smooth scroll for people that prefer not to see them
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+  }
+}
+/* stylelint-endable */

@@ -26,16 +26,28 @@
         "date": "Datum im Format YYYY-MM-TT",
         "lat": "Breitengrad",
         "lon": "Längengrad",
-        "attribute": "\"temperature\" oder \"felt_temp\""
+
+        "attribute": [  // liste von mäglichkeiten Werten
+          "temperature",
+          "felt_temp",
+          "cloudcover",
+          "weathercode",  // (für Kurzbeschreibung der Wettersituation)"
+          "windspeed_10m",
+          "winddirection_10m",
+          "relativehumidity_2m"
+        ]
       }
     },
     {
       "name": "KLIPS_DRESDEN",
-      "description": "Gibt genaue Prognosen für die Temperatur innerhalb der Stadt Dresden zurück. (+/- 2h)",
+      "description": "Gibt genaue Prognosen NUR FÜR DIE TEMPERATUR innerhalb der Stadt Dresden zurück.",
         "args": {
           "datetime": "Datum im Format YYYY-MM-TT HH:MM:SS",
           "lat": "Breitengrad",
           "lon": "Längengrad"
+        },
+        "returns": {
+          ... // Temperaturen, und Zeiten IN °C
         }
     }
   ]

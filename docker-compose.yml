@@ -15,6 +15,9 @@ services:
 
   socket:
     build: ./socket-server
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
-      - "5002:8080"
+      - "5002:5000"
+      - "5003:8080"
     restart: unless-stopped

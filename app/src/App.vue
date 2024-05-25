@@ -19,7 +19,7 @@ const openCall = ref(false)
 
   <main>
     <transition name="fade">
-    <div v-if="!openCall">
+      <div v-if="!openCall">
         <div class="coming-soon">
           <h2 class="claim">Coming soon</h2>
           <ArrowCurvedIcon class="icon arrow-left" />
@@ -67,6 +67,7 @@ main {
   margin-left: auto;
   margin-right: auto;
   line-height: 1.2;
+  color: #1A7268;
 }
 
 .claim {
@@ -100,13 +101,22 @@ main {
   height: 6rem;
 }
 .button--chatbot {
+  transition: border-color 0.25s ease-out;
   z-index: 10;
   position: relative;
-  animation: appear-center 1.2s ease-out forwards;
+  animation: appear-center 2.4s ease-out forwards;
+
+  .icon {
+    transition: color 0.25s ease-out;
+  }
 }
 
 .button--chatbot:hover {
-  transform: scale(1.1);
+  border-color: #26A697;
+
+  .icon {
+    color: #26A697;
+  }
 }
 
 .button--phone,
@@ -162,20 +172,29 @@ main {
 
 .fade-enter-active,
 .fade-leave-active {
+  position: absolute;
   transition: opacity 0.5s;
 }
 
 .fade-enter,
+.fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
 
 @keyframes appear-center {
-  from {
+  0% {
     opacity: 0;
   }
 
-  to {
+  40%, 50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  80%,
+  100% {
+    transform: scale(1.2);
     opacity: 1;
   }
 }

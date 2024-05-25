@@ -1,24 +1,80 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 
-import AudioRecorder from './../services/audio';
+import RecorderIcon from './Icons/Recorder.vue';
 
+// import AudioRecorder from './../services/audio';
+
+const recorder = ref()
+const isRecording = ref(false);
 const audioEle = ref<HTMLAudioElement>();
 
 function startRecording() {
-  const recorder = new AudioRecorder();
+  navigator.mediaDevices.getUserMedia({ audio: true }).then((stream: any) => {
+    recorder.value = new MediaRecorder(stream);
 
-  recorder.startRecording().then((stream: any) => {
-    if(!audioEle.value) return console.error('No audio element found')
+    recorder.value.ondataavailable = (event: any) => {
+      const audioBlob = new Blob([event.data], { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(audioBlob);
 
-    console.log('Stream', stream);
-    audioEle.value.srcObject = stream;
-  });
-  console.log('Start Recording', navigator.mediaDevices, navigator.mediaDevices.getUserMedia);
+      if(!audioEle.value) return console.error('No audio element found')
+
+      const formData = new FormData();
+
+      formData.append('audio', audioBlob);
+
+      fetch('http://localhost:5003/send-audio', {
+        method: 'POST',
+        body: formData
+      }).then((response: any) => {
+        console.log('Response', response);
+      }).catch((error: any) => {
+        console.error('Error', error);
+      })
+
+      audioEle.value.src = audioUrl;
+    }
+
+    recorder.value.start();
+    isRecording.value = true;
+  }).catch((error: any) => {
+    console.error('Error', error);
+  })
 }
 
 function stopRecording() {
-  console.log('Stop Recording');
+  if(!recorder.value) return console.error('No recorder found');
+
+  recorder.value.stop();
+  isRecording.value = false;
+}
+
+function toggleRecording() {
+  if(isRecording.value) {
+    stopRecording();
+    return;
+  }
+
+  startRecording();
+  // const recorder = new AudioRecorder();
+
+  // if(isRecording.value) {
+  //   recorder.stopRecording();
+  //   isRecording.value = false;
+  //   return;
+  // }
+
+  // recorder.startRecording().then((stream: any) => {
+  //   if(!audioEle.value) return console.error('No audio element found')
+
+  //   isRecording.value = true
+
+  //   console.log('Stream', stream);
+  //   audioEle.value.srcObject = stream;
+  // }).catch((error: any) => {
+  //   console.error('Error', error);
+  // })
+  // console.log('Start Recording', navigator.mediaDevices, navigator.mediaDevices.getUserMedia);
 }
 </script>
 
@@ -26,9 +82,9 @@ function stopRecording() {
   <div class="audio-recorder">
     <button
       class="audio-recorder__button"
-      @click="startRecording"
+      @click="toggleRecording"
     >
-      Start Recording
+      <RecorderIcon class="icon" />
     </button>
     <audio
       class="audio-recorder__audio"
@@ -37,3 +93,24 @@ function stopRecording() {
     ></audio>
   </div>
 </template>
+
+<style scoped>
+
+.audio-recorder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  background: #F5F5F5;
+}
+
+.icon {
+  display: block;
+  color: #721A30;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+</style>

@@ -1,7 +1,42 @@
 const WebSocket = require('ws');
+const express = require('express')
+const multer = require('multer')
+const cors = require('cors')
+
+const OpenAI = require('openai');
+const fs = require('fs');
+const streamifier = require('streamifier');
+
+const app = express()
+const upload = multer({ dest: 'uploads/' })
+const port = 8080
+
+app.use(cors())
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+app.post('/send-audio', upload.single('audio'), (req, res) => {
+	// console.log(streamifier.createReadStream(req.file.buffer));
+  openai.audio.transcriptions.create({
+		file: streamifier.createReadStream(req.file.buffer),
+		model: 'whisper-1',
+	}).then((response) => {
+		console.log('Response', response);
+
+		res.json(response);
+	}).catch((error) => {
+		console.error('Error', error);
+	})
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 // Create a WebSocket server
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 5000 });
 
 // Event listener for new connections
 wss.on('connection', (ws) => {
@@ -47,4 +82,4 @@ wss.on('connection', (ws) => {
 	});
 });
 
-console.log('WebSocket server is running on port 8080');
+console.log('WebSocket server is running on port 5000');

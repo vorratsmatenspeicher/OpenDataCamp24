@@ -1,0 +1,28 @@
+services:
+  logic:
+    build: ./logic-server
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
+
+  # app:
+  #   image: node:20
+  #   working_dir: /usr/src/app
+  #   command: ["npm", "start"]
+  #   ports:
+  #     - "80:3000"
+  #   volumes:
+  #     - ./app:/usr/src/app
+  #     - /app/node_modules
+  #   restart: unless-stopped
+
+  socket:
+    image: node:20
+    working_dir: /usr/src/app
+    command: ["node", "index.js"]
+    ports:
+      - "5002:8080"
+    volumes:
+      - ./socket-server:/usr/src/app
+      - /socket-server/node_modules
+    restart: unless-stopped

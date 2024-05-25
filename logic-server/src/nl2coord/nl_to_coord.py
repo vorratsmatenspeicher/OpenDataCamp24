@@ -1,8 +1,9 @@
 import json
 import hashlib
 import os
-from .osm_requests import get_bounding_boxes
+from .osm_requests import get_bounding_boxes, query_nominatim
 from .coord_intersection import find_first_intersection
+from .nl_interpreter import convert_location
 
 CACHE_DIR = 'cache'
 
@@ -31,6 +32,7 @@ def get_bounding_boxes_with_cache(params):
     cache_key = generate_cache_key(params)
     cached_data = load_from_cache(cache_key)
     if cached_data is not None:
+        print("using cached data for params")
         return cached_data
     
     data = get_bounding_boxes(params)
@@ -38,29 +40,70 @@ def get_bounding_boxes_with_cache(params):
     return data
 
 def get_coords(text):
-    # Erster Parameter der Anfrage
-    params1 = {
-        'format': 'json',
-        'q': 'Eisenstuckstraße Dresden Saxony Germany'
-    }
+    instructions_json = convert_location(text).strip()
 
-    # Zweiter Parameter der Anfrage
-    params2 = {
-        'format': 'json',
-        'q': 'Liebigstraße Dresden Saxony Germany'
-    }
+    print(f"{instructions_json!r}")
+    # Parse the JSON response
+    instructions = json.loads(instructions_json)
+    
+    print(instructions)
+    function_name = instructions['function']
+    parameters = instructions['parameters']
 
+    # Rufe die entsprechende Funktion mit den Parametern auf
+    if function_name in function_mapping:
+        function_to_call = function_mapping[function_name]
+        function_result = function_to_call(*parameters)
+        print(function_result)
+        return function_result
+    else:
+        print(f"Unbekannte Funktion: {function_name}")
+    
+    return None
+
+def add_general_location(query):
+    return query+" Dresden Saxony Germany"
+
+# Beispiel-Funktionen, die aufgerufen werden sollen
+def intersection(query_a, query_b):
+    query_a = add_general_location(query_a)
+    query_b = add_general_location(query_b)
+    print(query_a, query_b)
     # Laden der Bounding-Boxen mit Cache
-    array1 = get_bounding_boxes_with_cache(params1)
-    array2 = get_bounding_boxes_with_cache(params2)
+    array1 = get_bounding_boxes_with_cache(query_a)
+    array2 = get_bounding_boxes_with_cache(query_b)
 
+    print(array1)
+    print(array2)
     # Finde den ersten Schnittpunkt
     coords = find_first_intersection(array1, array2)
     return coords
 
+def closestPoint(query_a, query_b):
+    print(f"Aufruf von closestPoint mit {query_a} und {query_b}")
+    return None
+
+def getCoords(query):
+    query = add_general_location(query)
+    results = query_nominatim(query)
+    if results:
+        first = results[0]
+        if 'lat' in first and 'lon' in first:
+            return(first['lat'], first['lon'])
+    else:
+        print(f"Cannot find location for {query}")
+    return None
+
+# Mapping der Funktionsnamen zu den tatsächlichen Funktionen
+function_mapping = {
+    "intersection": intersection,
+    "closestPoint": closestPoint,
+    "getCoords": getCoords
+}
+
 # Beispiel zur Nutzung der Funktion
 if __name__ == "__main__":
-    coords = get_coords("Hochschulstraße Ecke Schnorrstraße Dresden Saxony Germany")
+    coords = get_coords("Oschatzer Straße")
 
     # Ausgabe der Ergebnisse
     if coords:

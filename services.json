@@ -1,0 +1,35 @@
+{
+  "services": [
+    {
+      "name": "WITTERUNG",
+      "description": "Gibt die relative Luftfeuchtigkeit und die Temperatur für einen bestimmten Ort und ein bestimmtes Datum zurück. Denke dir keine Koordinaten aus",
+      "args": {
+        "date": "Datum im Format YYYY-MM-TT",
+        "lat": "Breitengrad",
+        "lon": "Längengrad"
+      },
+      "returns": {
+        "data": "Wetterdaten"
+      }
+    },
+    {
+      "name": "CLOCK",
+      "description": "Gibt das aktuelle Datum und die aktuelle Uhrzeit zurück.",
+      "args": {},
+      "returns": {
+        "time": "Datum und Uhrzeit"
+      }
+    },
+    {
+      "name": "NL2CORD",
+      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate.",
+      "args": {
+        "description": "Beschreibung des Orts"
+      },
+      "returns": {
+        "lat": "Breitengrad",
+        "lon": "Längengrad"
+      }
+    }
+  ]
+}

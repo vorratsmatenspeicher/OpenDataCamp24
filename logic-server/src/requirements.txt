@@ -2,3 +2,4 @@ flask
 openai
 requests
 python-dotenv
+openmeteopy@ git+https://github.com/m0rp43us/openmeteopy

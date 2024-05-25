@@ -1,17 +1,6 @@
 {
   "services": [
-    {
-      "name": "WITTERUNG",
-      "description": "Gibt die relative Luftfeuchtigkeit und die Temperatur für einen bestimmten Ort und ein bestimmtes Datum zurück. Denke dir keine Koordinaten aus",
-      "args": {
-        "date": "Datum im Format YYYY-MM-TT",
-        "lat": "Breitengrad",
-        "lon": "Längengrad"
-      },
-      "returns": {
-        "data": "Wetterdaten"
-      }
-    },
+
     {
       "name": "CLOCK",
       "description": "Gibt das aktuelle Datum und die aktuelle Uhrzeit zurück.",
@@ -29,6 +18,16 @@
       "returns": {
         "lat": "Breitengrad",
         "lon": "Längengrad"
+      }
+    },
+    {
+      "name": "COARSE_TEMPERATURE",
+      "description": "Gibt den Temperaturverlauf eines Tages für einen bestimmten Ort zurück.",
+      "args": {
+        "date": "Datum im Format YYYY-MM-TT",
+        "lat": "Breitengrad",
+        "lon": "Längengrad",
+        "attribute": "\"temperature\"' oder \"felt_temp\""
       }
     }
   ]

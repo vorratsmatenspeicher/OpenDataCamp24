@@ -18,7 +18,7 @@ class DataAgent:
     def get_services_description(self) -> str:
         return Path("services.json").read_text()
 
-    def invoke_service(self, service: str, arguments: dict) -> dict:
+    def invoke_service(self, service: str, arguments: dict) -> dict | list:
         if service == "CLOCK":
             return {"time": datetime.datetime.now().isoformat()}
         elif service == "NL2COORD":
@@ -33,6 +33,20 @@ class DataAgent:
             lat, lon = nl2coord.nl_to_coord.get_coords(desc)
 
             return {"lat": lat, "lon": lon}
+
+        elif service == "COARSE_TEMPERATURE":
+            import dwd_forecast
+
+            try:
+                lat = arguments["lat"]
+                lon = arguments["lon"]
+                day = arguments["date"]
+                attribute = arguments["attribute"]
+            except KeyError as e:
+                raise InvalidApiCall(
+                    'Der API-Aufruf muss die Argumente \'lat\', \'lon\', \'date\' und \'attribute\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+
+            return dwd_forecast.get_weather_forcast(lon, lat, day, attribute)
 
         else:
             return {"error": f"Unknown service {service}"}
@@ -153,6 +167,9 @@ def create_session() -> Session:
     hints = textwrap.dedent("""
     Folge Dinge sind zu beachten:
     - Befrage die CLOCK-API JEDES MAL, wenn dich der Benutzer nach einer Uhrzeit fragt. Benutze NIEMALS Rückgaben der CLOCK-API, die älter sind als eine Anfrage des Benutzers.
+    - Gib knappe, aber präzise Antworten, als würdest du ein Telefongespräch führen.
+    - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu beginn deiner Nachricht. Schreibe keinen Text davor.
+    - Frage nicht, ob du spezifische APIs nutzen sollst. Nutze sie einfach, und entscheide, ob sie relevant für deine Antwort sind.
     """)
 
     dialog_agent = OpenAiDialogAgent(

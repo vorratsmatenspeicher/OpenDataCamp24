@@ -15,9 +15,9 @@ def indexesfromregex(dic: list, regex: str) -> list:
 
 
 def getListFromIndex(meteo: dict, valuelist: str, indexlist: list) -> list:
-    res = {valuelist: []}
+    res = []
     for i in indexlist:
-        res[valuelist].append({"value": meteo["hourly"][valuelist][i], "time": meteo["hourly"]["time"][i]})
+        res.append((meteo["hourly"]["time"][i], meteo["hourly"][valuelist][i]))
     return res
 
 
@@ -101,8 +101,8 @@ def get_weather_forcast(longitude: float, latitude: float, day: str, output: str
             return getHourlyValuesOfDay(meteo, day, "apparent_temperature")
         case "weathercode":
             l = getHourlyValuesOfDay(meteo, day, output)
-            for i in l[output]:
-                i["value"] = getWeatherCodeString(i["value"])
+            for i, e in enumerate(l):
+                l[i] = (e[0], getWeatherCodeString(e[1]))
             return l                
         case _:
             return getHourlyValuesOfDay(meteo, day, output)

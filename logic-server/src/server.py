@@ -20,6 +20,9 @@ logging.basicConfig(
 async def chat(websocket):
     s = session.create_session()
 
+    for token in s.get_response("Begrüße einen neuen Benutzer.", "system"):
+        await websocket.send(token)
+
     async for message in websocket:
         print(f"Received message: {message!r}")
         for token in s.get_response(message):

@@ -160,8 +160,8 @@ class Session:
     data_agent: DataAgent
     dialog_agent: DialogAgent
 
-    def get_response(self, prompt: str) -> typing.Generator[str, None, None]:
-        self.dialog_agent.add_message(prompt, "user")
+    def get_response(self, prompt: str, role="user") -> typing.Generator[str, None, None]:
+        self.dialog_agent.add_message(prompt, role)
 
         for i in range(10):
             try:

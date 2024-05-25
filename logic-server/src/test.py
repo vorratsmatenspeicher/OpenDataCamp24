@@ -16,14 +16,17 @@ def main():
     # )
 
     s = session.create_session()
+    prompt = "Begrüße einen neuen Benutzer."
+    role = "system"
     while 1:
-        prompt = input(" --> ")
-        it = s.get_response(prompt)
+        it = s.get_response(prompt, role)
+        role = "user"
 
         for token in it:
             print(token, end="", flush=True)
 
         print()
+        prompt = input(" --> ")
 
 if __name__ == "__main__":
     main()

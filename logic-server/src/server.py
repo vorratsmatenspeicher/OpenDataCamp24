@@ -1,7 +1,20 @@
+import logging
+import sys
+
 import session
 
 import asyncio
 from websockets.server import serve
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s:%(message)s',
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 
 
 async def chat(websocket):

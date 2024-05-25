@@ -4,6 +4,8 @@ services:
     ports:
       - "5001:5000"
     restart: unless-stopped
+    volumes:
+      - ./cache:/app/cache
 
   app:
     build: ./app
@@ -12,13 +14,7 @@ services:
     restart: unless-stopped
 
   socket:
-    image: node:20
-    working_dir: /usr/src/app
-    command: ["node", "index.js"]
-    # command: ["npm", "run", "dev"]
+    build: ./socket-server
     ports:
       - "5002:8080"
-    volumes:
-      - ./socket-server:/usr/src/app
-      - /socket-server/node_modules
     restart: unless-stopped

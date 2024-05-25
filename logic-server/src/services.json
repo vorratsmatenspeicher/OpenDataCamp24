@@ -1,6 +1,5 @@
 {
   "services": [
-
     {
       "name": "CLOCK",
       "description": "Gibt das aktuelle Datum und die aktuelle Uhrzeit zurück.",
@@ -11,7 +10,7 @@
     },
     {
       "name": "NL2COORD",
-      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate.",
+      "description": "Konvertiert eine Beschreibung eines Orts in eine Koordinate. Dazu zählen auch Schnittpunkte von Straßen.",
       "args": {
         "description": "Beschreibung des Orts"
       },
@@ -27,16 +26,27 @@
         "date": "Datum im Format YYYY-MM-TT",
         "lat": "Breitengrad",
         "lon": "Längengrad",
-        "attribute": "\"temperature\" oder \"felt_temp\""
+        "attribute": [  // liste von mäglichkeiten Werten, Datentyp ist str, NICHT list
+          "temperature",
+          "felt_temp",
+          "cloudcover",
+          "weathercode",  // (für Kurzbeschreibung der Wettersituation)"
+          "windspeed_10m",
+          "winddirection_10m",
+          "relativehumidity_2m"
+        ]
       }
     },
     {
       "name": "KLIPS_DRESDEN",
-      "description": "Gibt genaue Prognosen für die Temperatur innerhalb der Stadt Dresden zurück. (+/- 2h)",
+      "description": "Gibt genaue Prognosen NUR FÜR DIE TEMPERATUR innerhalb der Stadt Dresden zurück.",
         "args": {
-          "datetime": "Datum im Format YYYY-TT-MM HH:MM:SS",
+          "datetime": "Datum im Format YYYY-MM-TT HH:MM:SS",
           "lat": "Breitengrad",
           "lon": "Längengrad"
+        },
+        "returns": {
+          ... // Temperaturen, und Zeiten IN °C
         }
     }
   ]

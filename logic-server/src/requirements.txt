@@ -1,10 +1,9 @@
-flask
-openai
-requests
-python-dotenv
+flask==3.0.3
+openai==1.30.3
+requests==2.32.2
+python-dotenv==1.0.1
 openmeteopy@ git+https://github.com/m0rp43us/openmeteopy
 SpeechRecognition
 PyAudio
 vosk
 sounddevice
-

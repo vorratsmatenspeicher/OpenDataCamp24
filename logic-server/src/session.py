@@ -4,6 +4,7 @@ import abc
 import dataclasses
 import datetime
 import json
+import logging
 import textwrap
 import typing
 from pathlib import Path
@@ -30,9 +31,12 @@ class DataAgent:
                 raise InvalidApiCall(
                     'Der API-Aufruf muss das Argument \'description\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
-            lat, lon = nl2coord.nl_to_coord.get_coords(desc)
-
-            return {"lat": lat, "lon": lon}
+            out = nl2coord.nl_to_coord.get_coords(desc)
+            if out is None:
+                return {"error": "Koordinaten konnten nicht bestimmt werden."}
+            else:
+                lat, lon = out
+                return {"lat": lat, "lon": lon}
 
         elif service == "COARSE_TEMPERATURE":
             import dwd_forecast
@@ -56,9 +60,26 @@ class DataAgent:
                 date = arguments["datetime"]
             except KeyError as e:
                 raise InvalidApiCall(
-                    'Der API-Aufruf muss die Argumente \'lat\', \'lon\' und \'date\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+                    'Der API-Aufruf muss die Argumente \'lat\', \'lon\' und \'datetime\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
-            return klips_json.request((lat, lon), date)
+            try:
+                date = datetime.datetime.fromisoformat(date)
+
+                # convert date from local time to UTC using pytz
+                import pytz
+                local_tz = pytz.timezone("Europe/Berlin")
+                utc_tz = pytz.timezone("UTC")
+                date = local_tz.localize(date).astimezone(utc_tz).replace(tzinfo=None).isoformat()
+
+                return [
+                    (
+                        utc_tz.localize(d).astimezone(local_tz).replace(tzinfo=None).isoformat(),
+                        temp
+                    ) for d, temp in klips_json.request((lat, lon), date)
+                ]
+            except Exception as e:
+                # raise
+                return {"error": str(e)}
 
         else:
             return {"error": f"Unknown service {service}"}
@@ -71,6 +92,10 @@ class DialogAgent(abc.ABC):
 
     @abc.abstractmethod
     def get_response(self) -> str:
+        ...
+
+    @abc.abstractmethod
+    def remove_last_message(self):
         ...
 
 
@@ -89,9 +114,9 @@ class OpenAiDialogAgent(DialogAgent):
 
     def add_message(self, message: str, role: str):
         if role == "system":
-            print(f"SYS> {message}")
+            logging.getLogger("DialogAgent").info(f"SYS> {message}")
         elif role == "user":
-            print(f"USR> {message}")
+            logging.getLogger("DialogAgent").info(f"USR> {message}")
         self.messages.append(Message(role, message))
 
     def get_response(self) -> str:
@@ -110,6 +135,9 @@ class OpenAiDialogAgent(DialogAgent):
         self.add_message(msg.content, "system")
 
         return msg.content
+
+    def remove_last_message(self):
+        self.messages.pop()
 
 
 class InvalidApiCall(Exception):
@@ -146,7 +174,9 @@ class Session:
                     try:
                         parsed = json.loads(potential_json)
                     except (KeyError, json.JSONDecodeError) as e:
-                        raise InvalidApiCall("Du musst valides JSON angeben!") from e
+                        # raise InvalidApiCall("Du musst valides JSON angeben!") from e
+                        self.dialog_agent.remove_last_message()
+                        continue
 
                     try:
                         service = parsed["service"]

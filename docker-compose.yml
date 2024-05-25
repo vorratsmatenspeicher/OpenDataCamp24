@@ -3,9 +3,11 @@ services:
     build: ./logic-server
     ports:
       - "5001:5000"
-    restart: unless-stopped
     volumes:
       - ./cache:/app/cache
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    restart: unless-stopped
 
   app:
     build: ./app

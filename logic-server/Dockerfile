@@ -1,6 +1,9 @@
 # Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
+ARG OPENAI_API_KEY
+ENV OPENAI_API_KEY=OPENAI_API_KEY
+
 # Set the working directory in the container to /app
 WORKDIR /app
 

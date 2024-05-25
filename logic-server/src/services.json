@@ -26,8 +26,7 @@
         "date": "Datum im Format YYYY-MM-TT",
         "lat": "Breitengrad",
         "lon": "Längengrad",
-
-        "attribute": [  // liste von mäglichkeiten Werten
+        "attribute": [  // liste von mäglichkeiten Werten, Datentyp ist str, NICHT list
           "temperature",
           "felt_temp",
           "cloudcover",

@@ -6,7 +6,7 @@ import json
 import datetime
 from urllib import parse
 
-latLonMargins=0.02
+latLonMargins=0.03
 
 def get_nearest_id(coord: tuple[float, float]) -> int:
     def dist_to(id: int) -> float:
@@ -15,7 +15,7 @@ def get_nearest_id(coord: tuple[float, float]) -> int:
 
         dist = (lat - lat_closest) ** 2 + (lon - lon_closest) ** 2
 
-        if dist[0] > latLonMargins or dist[1] > latLonMargins:
+        if dist > latLonMargins:
             raise ValueError("Closest data point is far away.")
 
         return dist

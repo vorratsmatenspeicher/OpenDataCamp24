@@ -40,8 +40,9 @@ def query_nominatim(query):
         'q': query
     }
     response = requests.get(url, params=params)
-    time.sleep(1)  # 1-second delay to respect usage policies
+    time.sleep(2)  # 1-second delay to respect usage policies
     if response.status_code == 200:
+        print(response)
         data = response.json()
         save_to_cache(cache_key, data)  # Save the response in the cache
         return data

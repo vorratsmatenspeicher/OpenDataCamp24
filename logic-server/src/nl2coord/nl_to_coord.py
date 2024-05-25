@@ -80,8 +80,11 @@ def intersection(query_a, query_b):
     return coords
 
 def distance(a: tuple, b: tuple) -> float:
-    return (((a[0] * b[0])**2 + (a[1] * b[1])**2)**0,5)
+    return (((a[0] * b[0])**2 + (a[1] * b[1])**2)**0.5)
 
+
+def distance(a: tuple, b: tuple) -> float:
+    return ((a[0] - b[0])**2 + (a[1] - b[1])**2)**0.5
 
 def closestPoint(query_a, query_b):
     print(f"Aufruf von closestPoint mit {query_a} und {query_b}")
@@ -90,38 +93,41 @@ def closestPoint(query_a, query_b):
     results_a = query_nominatim(query_a)
     results_b = query_nominatim(query_b)
     
-    smaller = []
-    bigger = []
-    if len(results_a) > len(results_b):
-        bigger = results_a
-        smaller = results_b
-    else:
-        smaller = results_a
-        bigger = results_b
+    if not results_a or not results_b:
+        print(f"Cannot find location for {query_a} or {query_b}")
+        return (0, 0)
+    
+    smaller = results_a if len(results_a) <= len(results_b) else results_b
+    bigger = results_a if len(results_a) > len(results_b) else results_b
     
     pos_1 = ()
     if smaller:
         first = smaller[0]
         if 'lat' in first and 'lon' in first:
             pos_1 = (float(first['lat']), float(first['lon']))
-    else:
-        print(f"Cannot find location for {query}")
+    
+    if not pos_1:
+        print(f"Cannot find a valid location in {smaller}")
+        return (0, 0)
 
-    neerest = { 
-        "distance": 1000,
-        "position": (0,0)
+    nearest = { 
+        "distance": float('inf'),
+        "position": (0, 0)
     }
-    if bigger:
-        for i, e in enumerate(bigger):
-            if 'lat' in e and 'lon' in e:
-                pos = (float(e['lat']), float(e['lon']))
-                ad = distance(pos_1, pos)
-                if ad < neerest["distance"]:
-                    neerest["distance"] = ad
-                    neerest["position"] = pos
-    else:
-        print(f"Cannot find location for {query}")
-    return neerest["position"]
+
+    for e in bigger:
+        if 'lat' in e and 'lon' in e:
+            pos = (float(e['lat']), float(e['lon']))
+            ad = distance(pos_1, pos)
+            if ad < nearest["distance"]:
+                nearest["distance"] = ad
+                nearest["position"] = (float(e['lat']), float(e['lon']))
+
+    if nearest["distance"] == float('inf'):
+        print(f"Cannot find a closer location for {query_a} and {query_b}")
+        return (0, 0)
+
+    return nearest["position"]
 
 def getCoords(query):
     query = add_general_location(query)
@@ -143,7 +149,7 @@ function_mapping = {
 
 # Beispiel zur Nutzung der Funktion
 if __name__ == "__main__":
-    coords = get_coords("Oschatzer Straße")
+    coords = get_coords("Markthalle in der Nähe vom Goldenen Reiter")
 
     # Ausgabe der Ergebnisse
     if coords:

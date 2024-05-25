@@ -3,6 +3,8 @@
 import { ref, type Ref, onMounted, nextTick } from 'vue';
 import { marked } from 'marked';
 
+import SendIcon from './Icons/Send.vue'
+
 import AudioRecorder from './AudioRecorder.vue';
 import WebSocketService from '../services/socket';
 
@@ -12,7 +14,7 @@ const session = ref('');
 
 const chatMessagesEleScroll = ref()
 const chatMessagesEleInner = ref()
-const inProgress = ref(false);
+const inProgress = ref(true);
 const message = ref('');
 const messages = ref<{ owner: 'bot'|'self', message: any }[]>([]);
 const sendMessage = () => {
@@ -33,7 +35,9 @@ const sendMessage = () => {
 };
 
 function handleOpenMessage() {
-  messages.value.push({ owner: 'bot', message: 'Sie wünschen?' });
+  messages.value.push({ owner: 'bot', message: 'Ist dir kalt?' });
+
+  inProgress.value = false;
 }
 
 function handleMessageSend(event: MessageEvent) {
@@ -89,6 +93,7 @@ onMounted(() => {
       <div class="chat-messages__inner" ref="chatMessagesEleInner">
         <!-- Display chat messages here -->
         <div
+          class="chat-message"
           :class="{
               'chat-message--self': msg.owner === 'self',
               'chat-message--bot': msg.owner === 'bot'
@@ -96,7 +101,7 @@ onMounted(() => {
           v-for="(msg, index) in messages"
           :key="index"
         >
-          <span class="chat-message" v-html="msg.message"></span>
+          <span class="chat-message__inner" v-html="msg.message"></span>
         </div>
 
         <div class="chat-message--bot" v-if="inProgress">
@@ -110,7 +115,9 @@ onMounted(() => {
     <div class="chat-input">
       <div class="chat-input__text">
         <input type="text" v-model="message" @keyup.enter="sendMessage" placeholder="Type your message...">
-        <button @click="sendMessage">Send</button>
+        <button class="button-submit" @click="sendMessage">
+          <SendIcon class="icon" />
+        </button>
       </div>
       <div class="chat-input__audio">
         <audio-recorder />
@@ -138,13 +145,17 @@ onMounted(() => {
   background: #F5F5F5;
   border: solid 1px #040404;
   border-radius: .5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .chat-messages__inner {
   display: flex;
   flex-flow: column;
   gap: 1rem;
+}
+
+.chat-message--self {
+  text-align: right;
 }
 
 .chat-message--bot {
@@ -156,14 +167,15 @@ onMounted(() => {
   }
 }
 
-.chat-message {
+.chat-message__inner {
   display: inline-block;
+  text-align: left;
   font-weight: 500;
   font-size: 1.25rem;
-  padding: .5rem;
+  width: 90%;
+  padding: .5rem 1rem;
   color: #080D21;
   background: #37D2C0;
-  /* background: #9BABE8; */
   border-radius: .5rem;
 }
 
@@ -180,16 +192,23 @@ onMounted(() => {
   input {
     flex: 1;
     color: #333;
-    padding: .5rem;
+    padding: .75rem .5rem;
+    font-size: 1.125rem;
     background: #F5F5F5;
   }
 
-  button {
+  .button-submit {
     background: #26A697;
     color: white;
     border: none;
     padding: .5rem 1rem;
     cursor: pointer;
+
+    .icon {
+      display: block;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
   }
 }
 

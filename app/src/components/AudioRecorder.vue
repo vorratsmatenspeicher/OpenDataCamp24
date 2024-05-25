@@ -101,8 +101,8 @@ function toggleRecording() {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   overflow: hidden;
   background: #F5F5F5;
 }
@@ -110,7 +110,7 @@ function toggleRecording() {
 .icon {
   display: block;
   color: #721A30;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 </style>

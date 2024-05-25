@@ -27,7 +27,8 @@ class DataAgent:
             try:
                 desc = arguments["description"]
             except KeyError as e:
-                raise InvalidApiCall('Der API-Aufruf muss das Argument \'description\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
+                raise InvalidApiCall(
+                    'Der API-Aufruf muss das Argument \'description\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
             lat, lon = nl2coord.nl_to_coord.get_coords(desc)
 
@@ -97,12 +98,21 @@ class Session:
     def get_response(self, prompt: str) -> str:
         self.dialog_agent.add_message(prompt, "user")
 
+        out_messages = []
+
         while True:
             try:
                 response = self.dialog_agent.get_response().strip()
 
                 if "{" in response:
-                    potential_json = response[response.index("{"):].strip("`")
+                    message, potential_json = response.split("{", 1)
+                    potential_json = "{" + potential_json
+                    potential_json = potential_json.strip("`").strip()
+
+                    message = message.strip()
+                    if message:
+                        out_messages.append(message)
+
                     try:
                         parsed = json.loads(potential_json)
                     except (KeyError, json.JSONDecodeError) as e:
@@ -122,9 +132,12 @@ class Session:
                             role="system"
                         )
                 else:
-                    return response
+                    out_messages.append(response)
+                    break
             except InvalidApiCall as e:
                 self.dialog_agent.add_message(str(e), "system")
+
+        return "\n\n".join(out_messages)
 
 
 def create_session() -> Session:

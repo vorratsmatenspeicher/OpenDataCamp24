@@ -14,9 +14,28 @@ def create_session():
     while f"session_{i}" in SESSIONS:
         i += 1
 
-    location_determiner = session.LocationDeterminer()
+    location_determiner = session.DataAgent()
     dialog_agent = session.OpenAiDialogAgent(
         openai_client=openai.Client(),
+        messages=[session.Message(
+            role="system",
+            content="""Verhalte dich wie ein Berater zum Thema Bewältigung und Umgang mit Hitze. Gib konkrete Handlungsempfehlungen auf Anfragen. Nutze folgende APIs, um deine Anfragen mit spezifischen Daten zu füllen.
+Um eine API auszuführen, antworte NUR mit dem Namen der API sowie den Argumenten in JSON-Form. Beende danach deine Antwort. Folgende APIs stehen dir zur Verfügung:
+
+Heute ist der 2024-05-25.
+
+1)
+Name: GET_COORDINATES
+Beschreibung: Ermittelt aus der Beschreibung eines Ortes die geographischen Koordinaten.
+Beispielargumente: {"description": "Der Bäcker hinter dem Rathaus"}
+Beispielergebnis: {"lat": 23.2352, "lon": 7.2342}
+
+2)
+Name: GET_WEATHER
+Beschreibung: Gibt die aktuellen und prognostizierten Wetterdaten für einen Standort zurück.
+Beispielargumente: {"lat": 23.2352, "lon": 7.2342}
+Beispielergebnis: [{"date": "2024-05-25": {"temp": 45, "humidity": 99}}]"""
+        )]
     )
     SESSIONS[f"session_{i}"] = session.Session(location_determiner, dialog_agent)
 

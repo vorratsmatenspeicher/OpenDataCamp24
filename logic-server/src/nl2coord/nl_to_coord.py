@@ -79,9 +79,49 @@ def intersection(query_a, query_b):
     coords = find_first_intersection(array1, array2)
     return coords
 
+def distance(a: tuple, b: tuple) -> float:
+    return (((a[0] * b[0])**2 + (a[1] * b[1])**2)**0,5)
+
+
 def closestPoint(query_a, query_b):
     print(f"Aufruf von closestPoint mit {query_a} und {query_b}")
-    return None
+    query_a = add_general_location(query_a)
+    query_b = add_general_location(query_b)
+    results_a = query_nominatim(query_a)
+    results_b = query_nominatim(query_b)
+    
+    smaller = []
+    bigger = []
+    if len(results_a) > len(results_b):
+        bigger = results_a
+        smaller = results_b
+    else:
+        smaller = results_a
+        bigger = results_b
+    
+    pos_1 = ()
+    if smaller:
+        first = smaller[0]
+        if 'lat' in first and 'lon' in first:
+            pos_1 = (float(first['lat']), float(first['lon']))
+    else:
+        print(f"Cannot find location for {query}")
+
+    neerest = { 
+        "distance": 1000,
+        "position": (0,0)
+    }
+    if bigger:
+        for i, e in enumerate(bigger):
+            if 'lat' in e and 'lon' in e:
+                pos = (float(e['lat']), float(e['lon']))
+                ad = distance(pos_1, pos)
+                if ad < neerest["distance"]:
+                    neerest["distance"] = ad
+                    neerest["position"] = pos
+    else:
+        print(f"Cannot find location for {query}")
+    return neerest["position"]
 
 def getCoords(query):
     query = add_general_location(query)

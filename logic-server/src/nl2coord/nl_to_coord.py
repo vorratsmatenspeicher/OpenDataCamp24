@@ -62,7 +62,7 @@ def get_coords(text):
     return None
 
 def add_general_location(query):
-    return query+" Dresden Saxony Germany"
+    return query+" Dresden Germany"
 
 # Beispiel-Funktionen, die aufgerufen werden sollen
 def intersection(query_a, query_b):

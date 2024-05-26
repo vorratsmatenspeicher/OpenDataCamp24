@@ -7,6 +7,7 @@ services:
       - ./cache:/app/cache
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NOMINATIM_URL=${NOMINATIM_URL}
     restart: unless-stopped
 
   app:
@@ -23,3 +24,20 @@ services:
       - "5002:5000"
       - "5003:8080"
     restart: unless-stopped
+
+  nominatim:
+      container_name: nominatim
+      image: mediagis/nominatim:4.4
+      ports:
+          - "4321:8080"
+      environment:
+          # see https://github.com/mediagis/nominatim-docker/tree/master/4.4#configuration for more options
+          PBF_URL: https://download.geofabrik.de/europe/germany/sachsen-latest.osm.pbf
+          REPLICATION_URL: https://download.geofabrik.de/europe/germany/sachsen-updates/
+          NOMINATIM_PASSWORD: W?GV2MfXwQ5n
+      volumes:
+          - nominatim-data:/var/lib/postgresql/14/main
+      shm_size: 4gb
+
+volumes:
+    nominatim-data:

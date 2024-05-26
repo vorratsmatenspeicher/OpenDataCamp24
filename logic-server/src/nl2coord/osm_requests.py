@@ -1,10 +1,13 @@
 import json
 import hashlib
 import os
+import dotenv
 import requests
 import time
 
 CACHE_DIR = 'cache'
+
+dotenv.load_dotenv()
 
 # Create the cache directory if it doesn't exist
 if not os.path.exists(CACHE_DIR):
@@ -34,7 +37,8 @@ def query_nominatim(query):
         print("Using cached data for params")
         return cached_data
     
-    url = "https://nominatim.openstreetmap.org/search"
+    url = os.environ.get("NOMINATIM_URL") or "https://nominatim.openstreetmap.org/search"
+    print("Nominatim request to {url}")
     params = {
         'format': "json",
         'q': query

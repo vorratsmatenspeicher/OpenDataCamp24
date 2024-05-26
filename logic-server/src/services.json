@@ -42,8 +42,8 @@
       "description": "Gibt genaue Prognosen NUR FÜR DIE TEMPERATUR innerhalb der Stadt Dresden zurück.",
         "args": {
           "datetime": "Datum im Format YYYY-MM-TT HH:MM:SS",
-          "lat": "Breitengrad",
-          "lon": "Längengrad"
+          "lat": "Breitengrad",  // float
+          "lon": "Längengrad"  // float
         },
         "returns": {
           ... // Temperaturen, und Zeiten IN °C

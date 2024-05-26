@@ -80,11 +80,16 @@ def intersection(query_a, query_b):
     return coords
 
 def distance(a: tuple, b: tuple) -> float:
-    return (((a[0] * b[0])**2 + (a[1] * b[1])**2)**0.5)
-
-
-def distance(a: tuple, b: tuple) -> float:
     return ((a[0] - b[0])**2 + (a[1] - b[1])**2)**0.5
+
+import math
+
+def distance_on_earth(a: tuple, b: tuple) -> float:
+    dlat = abs(a[0] - b[0])
+    dlon = abs(a[1] - b[1])
+    a = math.sin(dlat/2)**2+math.cos(a[0])*math.cos(b[0])*math.sin(dlon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    return 6357 * c
 
 def closestPoint(query_a, query_b):
     print(f"Aufruf von closestPoint mit {query_a} und {query_b}")
@@ -118,7 +123,7 @@ def closestPoint(query_a, query_b):
     for e in bigger:
         if 'lat' in e and 'lon' in e:
             pos = (float(e['lat']), float(e['lon']))
-            ad = distance(pos_1, pos)
+            ad = distance_on_earth(pos_1, pos)
             if ad < nearest["distance"]:
                 nearest["distance"] = ad
                 nearest["position"] = (float(e['lat']), float(e['lon']))
@@ -149,7 +154,8 @@ function_mapping = {
 
 # Beispiel zur Nutzung der Funktion
 if __name__ == "__main__":
-    coords = get_coords("Markthalle in der Nähe vom Goldenen Reiter")
+    input_promt = input("Promt to test: ")
+    coords = get_coords(input_promt)
 
     # Ausgabe der Ergebnisse
     if coords:

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineEmits, nextTick } from 'vue';
 
 import RecorderIcon from './Icons/Recorder.vue';
 
@@ -9,77 +9,119 @@ const recorder = ref()
 const isRecording = ref(false);
 const audioEle = ref<HTMLAudioElement>();
 
-function startRecording() {
-  navigator.mediaDevices.getUserMedia({ audio: true }).then((stream: any) => {
-    recorder.value = new MediaRecorder(stream);
+const emit = defineEmits([ 'onRecording' ]);
 
-    recorder.value.ondataavailable = (event: any) => {
-      const audioBlob = new Blob([event.data], { type: 'audio/wav' });
-      const audioUrl = URL.createObjectURL(audioBlob);
+// onMounted(() => {
+//   console.log(window.webkitSpeechRecognition, window.webkitSpeechGrammarList);
 
-      if(!audioEle.value) return console.error('No audio element found')
+// })
 
-      const formData = new FormData();
+const recognition = new webkitSpeechRecognition();
+const speechRecognitionList = new webkitSpeechGrammarList();
 
-      formData.append('audio', audioBlob);
+recognition.grammars = speechRecognitionList;
+recognition.continuous = true;
+recognition.lang = "de-DE";
+recognition.interimResults = true;
+recognition.maxAlternatives = 1;
 
-      fetch('http://localhost:5003/send-audio', {
-        method: 'POST',
-        body: formData
-      }).then((response: any) => {
-        console.log('Response', response);
-      }).catch((error: any) => {
-        console.error('Error', error);
-      })
+recognition.onresult = (event) => {
+  // console.log(event.results[0][0].transcript);
 
-      audioEle.value.src = audioUrl;
-    }
+  emit('onRecording', event.results[0][0].transcript);
 
-    recorder.value.start();
-    isRecording.value = true;
-  }).catch((error: any) => {
-    console.error('Error', error);
-  })
-}
-
-function stopRecording() {
-  if(!recorder.value) return console.error('No recorder found');
-
-  recorder.value.stop();
-  isRecording.value = false;
-}
+  // console.log(`Confidence: ${event.results[0][0].confidence}`);
+};
 
 function toggleRecording() {
   if(isRecording.value) {
-    stopRecording();
+    recognition.stop();
+    isRecording.value = false;
     return;
   }
 
-  startRecording();
-  // const recorder = new AudioRecorder();
+  recognition.start();
 
-  // if(isRecording.value) {
-  //   recorder.stopRecording();
-  //   isRecording.value = false;
-  //   return;
-  // }
+  isRecording.value = true;
 
-  // recorder.startRecording().then((stream: any) => {
-  //   if(!audioEle.value) return console.error('No audio element found')
+  console.log('startRecording', recognition);
 
-  //   isRecording.value = true
-
-  //   console.log('Stream', stream);
-  //   audioEle.value.srcObject = stream;
-  // }).catch((error: any) => {
-  //   console.error('Error', error);
-  // })
-  // console.log('Start Recording', navigator.mediaDevices, navigator.mediaDevices.getUserMedia);
 }
+
+// function startRecording() {
+//   navigator.mediaDevices.getUserMedia({ audio: true }).then((stream: any) => {
+//     recorder.value = new MediaRecorder(stream);
+
+//     recorder.value.ondataavailable = (event: any) => {
+//       const audioBlob = new Blob([event.data], { type: 'audio/wav' });
+//       const audioUrl = URL.createObjectURL(audioBlob);
+
+//       if(!audioEle.value) return console.error('No audio element found')
+
+//       const formData = new FormData();
+
+//       formData.append('audio', audioBlob);
+
+//       fetch('http://localhost:5003/send-audio', {
+//         method: 'POST',
+//         body: formData
+//       }).then((response: any) => {
+//         console.log('Response', response);
+//       }).catch((error: any) => {
+//         console.error('Error', error);
+//       })
+
+//       audioEle.value.src = audioUrl;
+//     }
+
+//     recorder.value.start();
+//     isRecording.value = true;
+//   }).catch((error: any) => {
+//     console.error('Error', error);
+//   })
+// }
+
+// function stopRecording() {
+//   if(!recorder.value) return console.error('No recorder found');
+
+//   recorder.value.stop();
+//   isRecording.value = false;
+// }
+
+// function toggleRecording() {
+//   if(isRecording.value) {
+//     stopRecording();
+//     return;
+//   }
+
+//   startRecording();
+//   // const recorder = new AudioRecorder();
+
+//   // if(isRecording.value) {
+//   //   recorder.stopRecording();
+//   //   isRecording.value = false;
+//   //   return;
+//   // }
+
+//   // recorder.startRecording().then((stream: any) => {
+//   //   if(!audioEle.value) return console.error('No audio element found')
+
+//   //   isRecording.value = true
+
+//   //   console.log('Stream', stream);
+//   //   audioEle.value.srcObject = stream;
+//   // }).catch((error: any) => {
+//   //   console.error('Error', error);
+//   // })
+//   // console.log('Start Recording', navigator.mediaDevices, navigator.mediaDevices.getUserMedia);
+// }
 </script>
 
 <template>
-  <div class="audio-recorder">
+  <div
+    :class="{ 'is-recording': isRecording }"
+    class="audio-recorder"
+  >
     <button
       class="audio-recorder__button"
       @click="toggleRecording"
@@ -105,6 +147,14 @@ function toggleRecording() {
   height: 3rem;
   overflow: hidden;
   background: #F5F5F5;
+}
+
+.is-recording {
+  background: #721A30;
+
+  .icon {
+    color: white;
+  }
 }
 
 .icon {

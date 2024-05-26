@@ -66,6 +66,13 @@ function handleMessageSend(event: MessageEvent) {
   // messages.value.push({ owner: 'bot', message: event.data });
 }
 
+function handleSpeechToText(text: string) {
+  console.log('Speech to text', text);
+
+  message.value = text;
+  // sendMessage();
+}
+
 onMounted(() => {
   socket.value = new WebSocketService('ws://localhost:5002', {
     onopen: handleOpenMessage,
@@ -115,7 +122,7 @@ onMounted(() => {
         </button>
       </div>
       <div class="chat-input__audio">
-        <audio-recorder />
+        <audio-recorder @onRecording="handleSpeechToText" />
       </div>
     </div>
   </div>

@@ -36,8 +36,8 @@ def _retrieve_from_file(assistant_id, prompt):
 
 def retrieve_from_file(assistant_id, prompt) -> typing.Generator[str, None, None]:
     for chunk in _retrieve_from_file(assistant_id, prompt):
-        if chunk.choices[0].delta.content is not None:
-            yield chunk.choices[0].delta.content
+        if chunk.event == "thread.message.delta":
+            yield chunk.data.delta.content[0].text.value
 
 
 # Beispiel zur Nutzung der Funktion

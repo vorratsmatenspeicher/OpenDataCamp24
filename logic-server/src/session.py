@@ -21,7 +21,11 @@ class DataAgent:
 
     def invoke_service(self, service: str, arguments: dict) -> typing.Generator[str, None, None]:
         if service == "CLOCK":
-            yield str({"time": datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")})
+            import pytz
+            local_tz = pytz.timezone("Europe/Berlin")
+            utc_tz = pytz.timezone("UTC")
+
+            yield str({"time": utc_tz.localize(datetime.datetime.utcnow()).astimezone(local_tz).strftime("%d.%m.%Y %H:%M:%S")})
         elif service == "NL2COORD":
             import nl2coord.nl_to_coord
 
@@ -31,12 +35,16 @@ class DataAgent:
                 raise InvalidApiCall(
                     'Der API-Aufruf muss das Argument \'description\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
-            out = nl2coord.nl_to_coord.get_coords(desc)
-            if out is None:
-                yield str({"error": "Koordinaten konnten nicht bestimmt werden."})
+            try:
+                out = nl2coord.nl_to_coord.get_coords(desc)
+            except Exception as e:
+                yield str({"error": str(e)})
             else:
-                lat, lon = out
-                yield str({"lat": lat, "lon": lon})
+                if out is None:
+                    yield str({"error": "Koordinaten konnten nicht bestimmt werden."})
+                else:
+                    lat, lon = out
+                    yield str({"lat": lat, "lon": lon})
 
         elif service == "GENERAL_WEATHER":
             import dwd_forecast
@@ -108,7 +116,6 @@ class DialogAgent(abc.ABC):
         ...
 
 
-
 @dataclasses.dataclass
 class Message:
     role: str
@@ -163,47 +170,50 @@ class Session:
     def get_response(self, prompt: str, role="user") -> typing.Generator[str, None, None]:
         self.dialog_agent.add_message(prompt, role)
 
-        for i in range(10):
+        clock_msg_index = len(self.dialog_agent.messages)
+        self.dialog_agent.add_message("{\"service\": \"CLOCK\", \"args\": {}}", "system")
+        self.dialog_agent.add_message("API-Antwort: " + "".join(self.data_agent.invoke_service("CLOCK", {})), "system")
+
+        for _ in range(10):
             try:
-                if i == 0:
-                    response = '{"service": "CLOCK", "args": {}}'
-                    self.dialog_agent.add_message(response, "user")
-                else:
-                    response_iterator = self.dialog_agent.get_response()
-                    for token in response_iterator:
-                        if "{" not in token:
-                            yield token
-                        else:
-                            up_to, after = token.split("{", 1)
-                            yield up_to
-                            break
+                response_iterator = self.dialog_agent.get_response()
+
+                for token in response_iterator:
+                    if "{" not in token:
+                        yield token
                     else:
+                        up_to, after = token.split("{", 1)
+                        yield up_to
                         break
+                else:
+                    break
 
-                    potential_json = ("{" + after + "".join(response_iterator)).strip("`").strip()
+                potential_json = ("{" + after + "".join(response_iterator)).strip("`").strip()
 
-                    try:
-                        parsed = json.loads(potential_json)
-                    except (KeyError, json.JSONDecodeError) as e:
-                        # raise InvalidApiCall("Du musst valides JSON angeben!") from e
-                        self.dialog_agent.messages.pop()
-                        continue
+                try:
+                    parsed = json.loads(potential_json)
+                except (KeyError, json.JSONDecodeError) as e:
+                    # raise InvalidApiCall("Du musst valides JSON angeben!") from e
+                    self.dialog_agent.messages.pop()
+                    continue
 
-                    try:
-                        service = parsed["service"]
-                        args = parsed["args"]
-                    except KeyError as e:
-                        raise InvalidApiCall("Der API-Aufruf muss die Schlüssel 'service' und 'args' enthalten!") from e
+                try:
+                    service = parsed["service"]
+                    args = parsed["args"]
+                except KeyError as e:
+                    raise InvalidApiCall("Der API-Aufruf muss die Schlüssel 'service' und 'args' enthalten!") from e
 
-                    else:
-                        result = "API-Antwort: " + "".join(self.data_agent.invoke_service(service, args))
+                else:
+                    result = "API-Antwort: " + "".join(self.data_agent.invoke_service(service, args))
 
-                        self.dialog_agent.add_message(
-                            message=json.dumps(result, ensure_ascii=False),
-                            role="system"
-                        )
+                    self.dialog_agent.add_message(
+                        message=json.dumps(result, ensure_ascii=False),
+                        role="system"
+                    )
             except InvalidApiCall as e:
                 self.dialog_agent.add_message(str(e), "system")
+
+        del self.dialog_agent.messages[clock_msg_index:clock_msg_index+2]
 
 
 def create_session() -> Session:
@@ -211,7 +221,7 @@ def create_session() -> Session:
 
     system_prompt = textwrap.dedent(f"""
     Verhalte dich wie ein Berater zum Thema Bewältigung und Umgang mit Hitze. Gib konkrete Handlungsempfehlungen auf Anfragen. Nutze folgende APIs, um deine Anfragen mit spezifischen Daten zu füllen.
-    Um eine API auszuführen, antworte NUR mit dem Namen der API sowie den Argumenten in JSON-Form. Beende danach deine Antwort. Frage keine APIs, an wenn der Benutzer nicht nach relevaten Informationen gefragt hat. Folgende APIs stehen dir zur Verfügung:
+    Um eine API auszuführen, beende deine Antwort mit einem JSON in der Form {{"service": "<name der API>", "args": {{<argumente der API>}}}}. BEENDE DANACH DEINE ANTWORT. Frage keine APIs, an wenn der Benutzer nicht nach relevaten Informationen gefragt hat. Folgende APIs stehen dir zur Verfügung:
     {data_agent.get_services_description()}
     Es folgen Beispiele für die API-Aufrufe:
     """ + '{"service": "CLOCK", args: {}}')

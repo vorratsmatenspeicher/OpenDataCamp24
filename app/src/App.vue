@@ -13,7 +13,7 @@ const openCall = ref(false)
 <template>
   <header>
     <div class="container">
-      <h1 class="headline">DIGITALER WETTERASSISTENT</h1>
+      <h1 class="headline">CLIMATE<br>COUNSELOR</h1>
     </div>
   </header>
 

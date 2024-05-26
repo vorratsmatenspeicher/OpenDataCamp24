@@ -139,6 +139,8 @@ function toggleRecording() {
 <style scoped>
 
 .audio-recorder {
+  transition: background 0.3s ease-in-out;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,6 +149,10 @@ function toggleRecording() {
   height: 3rem;
   overflow: hidden;
   background: #F5F5F5;
+}
+
+.audio-recorder:hover {
+  background: #D6D6D6;
 }
 
 .is-recording {

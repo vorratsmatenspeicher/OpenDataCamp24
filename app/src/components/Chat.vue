@@ -204,6 +204,7 @@ onMounted(() => {
   }
 
   .button-submit {
+    transition: background 0.3s ease-in-out;
     background: #26A697;
     color: white;
     border: none;
@@ -215,6 +216,10 @@ onMounted(() => {
       width: 1.5rem;
       height: 1.5rem;
     }
+  }
+
+  .button-submit:hover {
+    background: #1E8579;
   }
 }
 

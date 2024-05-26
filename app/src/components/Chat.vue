@@ -23,7 +23,7 @@ const sendMessage = () => {
     prompt: message.value
   }));
 
-  messages.value.push({ owner: 'self', message: marked.parseInline(message.value) });
+  messages.value.push({ owner: 'self', message: marked.parseInline(message.value, { breaks: true }) });
 
   inProgress.value = true;
 
@@ -48,9 +48,9 @@ function handleMessageSend(event: MessageEvent) {
   if(socketMsg.type === 'message') {
     if(!socketMsg.data) return;
     if(!messages.value.length || messages.value[messages.value.length - 1].owner === 'self') {
-      messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data) });
+      messages.value.push({ owner: 'bot', message: marked.parseInline(socketMsg.data, { breaks: true }) });
     } else {
-      messages.value[messages.value.length - 1].message = marked.parseInline(messages.value[messages.value.length - 1].message + socketMsg.data);
+      messages.value[messages.value.length - 1].message = marked.parseInline(messages.value[messages.value.length - 1].message + socketMsg.data, { breaks: true });
     }
 
     nextTick(() => {

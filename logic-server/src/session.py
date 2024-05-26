@@ -58,6 +58,9 @@ class DataAgent:
                 raise InvalidApiCall(
                     'Der API-Aufruf muss die Argumente \'lat\', \'lon\', \'date\' und \'attribute\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
+            if not isinstance(attribute, str):
+                raise InvalidApiCall("GENERAL_WEATHER: 'attribute' muss ein String sein!")
+
             yield str(dwd_forecast.get_weather_forcast(lon, lat, day, attribute))
         elif service == "KLIPS_DRESDEN":
             import klips_json

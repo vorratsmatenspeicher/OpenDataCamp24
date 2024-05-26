@@ -13,10 +13,12 @@ dotenv.load_dotenv()
 if not os.path.exists(CACHE_DIR):
     os.makedirs(CACHE_DIR)
 
+
 def generate_cache_key(params):
     # Create a unique hash based on the request parameters
     hash_input = json.dumps(params, sort_keys=True).encode('utf-8')
     return hashlib.md5(hash_input).hexdigest()
+
 
 def load_from_cache(cache_key):
     cache_path = os.path.join(CACHE_DIR, cache_key)
@@ -25,10 +27,12 @@ def load_from_cache(cache_key):
             return json.load(cache_file)
     return None
 
+
 def save_to_cache(cache_key, data):
     cache_path = os.path.join(CACHE_DIR, cache_key)
     with open(cache_path, 'w') as cache_file:
         json.dump(data, cache_file)
+
 
 def query_nominatim(query):
     cache_key = generate_cache_key(query)
@@ -50,12 +54,13 @@ def query_nominatim(query):
         data = response.json()
         save_to_cache(cache_key, data)  # Save the response in the cache
         return data
+    elif response.status_code == 403:
+        raise Exception(f"Nominatim API blocked us, too many requests. {response.status_code}")
     else:
-        print(f"Error: {response.status_code}")
-        return None
+        raise Exception(f"Nominatim API returned wrong statuscode. {response.status_code}")
+
 
 def get_bounding_boxes(query):
-
     results = query_nominatim(query)
     bounding_boxes = []
 
@@ -65,5 +70,5 @@ def get_bounding_boxes(query):
                 bounding_boxes.append(result['boundingbox'])
     else:
         print(f"Cannot find location for {query}")
-    
+
     return bounding_boxes

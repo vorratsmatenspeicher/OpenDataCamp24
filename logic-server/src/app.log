@@ -1,0 +1,145 @@
+2024-05-26 11:51:52,624 INFO:SYS> Begrüße einen neuen Benutzer.
+2024-05-26 11:51:52,624 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:51:52,647 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:51:52'}
+2024-05-26 11:51:53,140 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:51:53,397 INFO:SYS> Guten Tag! Wie kann ich Ihnen heute beim Thema Bewältigung und Umgang mit Hitze behilflich sein?
+2024-05-26 11:52:11,183 INFO:USR> What's the weather like today
+2024-05-26 11:52:11,184 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:52:11,185 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:52:11'}
+2024-05-26 11:52:11,836 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:52:11,948 INFO:SYS> Könnten Sie bitte den Ort angeben, für den Sie die Wetterinformationen wünschen?
+2024-05-26 11:52:20,958 INFO:USR> HTW Dresden
+2024-05-26 11:52:20,959 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:52:20,959 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:52:20'}
+2024-05-26 11:52:21,653 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:52:21,803 INFO:SYS> {"service": "NL2COORD", "args": {"description": "HTW Dresden"}}
+2024-05-26 11:52:22,802 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:52:25,009 INFO:SYS> "API-Antwort: {'lat': 51.0375203, 'lon': 13.734988}"
+2024-05-26 11:52:25,519 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:52:26,053 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0375203, "lon": 13.734988, "attribute": "temperature"}}
+2024-05-26 11:52:26,903 INFO:SYS> "API-Antwort: [('2024-05-26T00:00', 12.6), ('2024-05-26T01:00', 11.8), ('2024-05-26T02:00', 11.4), ('2024-05-26T03:00', 10.9), ('2024-05-26T04:00', 10.9), ('2024-05-26T05:00', 12.1), ('2024-05-26T06:00', 13.4), ('2024-05-26T07:00', 15.5), ('2024-05-26T08:00', 18.5), ('2024-05-26T09:00', 21.5), ('2024-05-26T10:00', 23.2), ('2024-05-26T11:00', 23.6), ('2024-05-26T12:00', 24.1), ('2024-05-26T13:00', 24.2), ('2024-05-26T14:00', 24.2), ('2024-05-26T15:00', 23.9), ('2024-05-26T16:00', 22.0), ('2024-05-26T17:00', 23.0), ('2024-05-26T18:00', 22.4), ('2024-05-26T19:00', 21.0), ('2024-05-26T20:00', 20.0), ('2024-05-26T21:00', 19.0), ('2024-05-26T22:00', 18.3), ('2024-05-26T23:00', 17.9)]"
+2024-05-26 11:52:27,368 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:52:27,915 INFO:SYS> Heute in Dresden an der HTW liegen die Temperaturen zurzeit bei etwa 24°C und werden im Laufe des Tages schrittweise wieder auf etwa 18°C gegen Abend abkühlen.
+
+Gibt es noch etwas, worin ich Ihnen helfen kann?
+2024-05-26 11:53:39,014 INFO:USR> Nö
+2024-05-26 11:53:39,014 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:53:39,015 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:53:39'}
+2024-05-26 11:53:39,677 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:53:39,988 INFO:SYS> Vielen Dank und einen schönen Tag noch! Es ist momentan 11:53 Uhr. Falls Sie später noch Fragen haben, stehe ich gern zur Verfügung.
+2024-05-26 11:54:33,027 INFO:SYS> Begrüße einen neuen Benutzer.
+2024-05-26 11:54:33,027 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:54:33,044 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:54:33'}
+2024-05-26 11:54:34,107 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:54:34,474 INFO:SYS> Guten Tag! Wie kann ich Ihnen helfen, um mit der Hitze am 26. Mai 2024 umzugehen?
+2024-05-26 11:54:44,009 INFO:USR> Wetter an der HTW Dresden
+2024-05-26 11:54:44,009 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:54:44,010 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:54:44'}
+2024-05-26 11:54:44,537 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:54:44,817 INFO:SYS> {"service": "NL2COORD", "args": {"description": "HTW Dresden"}}
+2024-05-26 11:54:45,789 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:54:45,796 INFO:SYS> "API-Antwort: {'error': 'Expecting value: line 1 column 1 (char 0)'}"
+2024-05-26 11:54:51,944 INFO:SYS> Begrüße einen neuen Benutzer.
+2024-05-26 11:54:51,944 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:54:51,961 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:54:51'}
+2024-05-26 11:54:52,476 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:54:52,492 INFO:SYS> Guten Tag! Wie kann ich Ihnen helfen?
+2024-05-26 11:55:00,312 INFO:USR> Wetter an der HTW Dresden
+2024-05-26 11:55:00,313 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:55:00,313 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:55:00'}
+2024-05-26 11:55:00,934 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:55:01,159 INFO:SYS> {"service": "NL2COORD", "args": {"description": "HTW Dresden"}}
+2024-05-26 11:55:02,083 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:55:02,087 INFO:SYS> "API-Antwort: {'lat': 51.0375203, 'lon': 13.734988}"
+2024-05-26 11:55:02,605 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:55:03,102 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0375203, "lon": 13.734988, "attribute": "temperature"}}
+2024-05-26 11:55:03,649 INFO:SYS> "API-Antwort: [('2024-05-26T00:00', 12.6), ('2024-05-26T01:00', 11.8), ('2024-05-26T02:00', 11.4), ('2024-05-26T03:00', 10.9), ('2024-05-26T04:00', 10.9), ('2024-05-26T05:00', 12.1), ('2024-05-26T06:00', 13.4), ('2024-05-26T07:00', 15.5), ('2024-05-26T08:00', 18.5), ('2024-05-26T09:00', 21.5), ('2024-05-26T10:00', 23.2), ('2024-05-26T11:00', 23.6), ('2024-05-26T12:00', 24.1), ('2024-05-26T13:00', 24.2), ('2024-05-26T14:00', 24.2), ('2024-05-26T15:00', 23.9), ('2024-05-26T16:00', 22.0), ('2024-05-26T17:00', 23.0), ('2024-05-26T18:00', 22.4), ('2024-05-26T19:00', 21.0), ('2024-05-26T20:00', 20.0), ('2024-05-26T21:00', 19.0), ('2024-05-26T22:00', 18.3), ('2024-05-26T23:00', 17.9)]"
+2024-05-26 11:55:04,276 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:55:05,127 INFO:SYS> Die Temperaturen an der HTW Dresden am 26. Mai 2024 bewegen sich im Verlauf des Tages von frühmorgens 10.9°C bis mittags 24.2°C und sinken abends wieder auf etwa 17.9°C. Gibt es sonst noch etwas, wobei ich Ihnen helfen kann?
+2024-05-26 11:55:22,569 INFO:USR> Gib mir Uhrzeit
+2024-05-26 11:55:22,570 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:55:22,571 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:55:22'}
+2024-05-26 11:55:23,285 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:55:23,535 INFO:SYS> Die aktuelle Uhrzeit ist 11:55 Uhr am 26. Mai 2024. Was kann ich sonst noch für Sie tun?
+2024-05-26 11:55:53,379 INFO:USR> sollte ich heute in die Innenstadt gehen, obwohl es warm ist
+2024-05-26 11:55:53,379 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:55:53,379 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:55:53'}
+2024-05-26 11:55:53,994 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:55:55,246 INFO:SYS> Eine Entscheidung darüber, ob man bei warmem Wetter in die Innenstadt gehen sollte, hängt von verschiedenen Faktoren ab, wie persönliche Gesundheit, geplante Aktivitäten und aktuelle Wetterbedingungen. Ich werde Ihnen einige Empfehlungen aus dem entsprechenden Handbuch geben.
+
+{"service": "HITZE_HANDBUCH", "args": {"prompt": "Sollte ich bei warmem Wetter in die Stadt gehen?"}}
+2024-05-26 11:55:55,611 INFO:HTTP Request: GET https://api.openai.com/v1/assistants/asst_iwLP1f7aRgI9N3uD93TlojYA "HTTP/1.1 200 OK"
+2024-05-26 11:55:55,872 INFO:HTTP Request: POST https://api.openai.com/v1/threads "HTTP/1.1 200 OK"
+2024-05-26 11:55:56,500 INFO:HTTP Request: POST https://api.openai.com/v1/threads/thread_pQH1hDsfHyyewRZ5e713lZXE/runs "HTTP/1.1 200 OK"
+2024-05-26 11:56:05,927 INFO:SYS> "API-Antwort: Bei warmem Wetter ist es ratsam, einige Maßnahmen zu ergreifen, wenn du in die Stadt gehen möchtest:\n\n1. Trinke ausreichend Wasser oder andere alkoholfreie Getränke, trage helle, weite und leichte Kleidung, schütze deine Augen und deinen Kopf mit einer Sonnenbrille und einem Hut, meide die direkte Sonne besonders zwischen 11 und 15 Uhr, kühle deinen Körper ab, indem du nasse Tücher auf Arme, Beine, Stirn oder Nacken legst, halte deine Wohnung kühl und erledige wichtige Dinge morgens und abends【4:0†source】.\n\n2. Achte auf die thermische Belastung in der Stadt, insbesondere an offenen und versiegelten Plätzen sowie auf unbeschatteten Straßen, da dort die höchste Hitzebelastung zu verzeichnen ist. Es wird empfohlen, schattige Plätze zu nutzen und wichtige Dinge morgens und abends zu erledigen, um eine starke Hitzebelastung zu vermeiden【4:1†source】.\n\n3. Berücksichtige den UV-Index, um die Stärke der Sonnenstrahlung zu verstehen. Schütze dich angemessen mit Kleidung, Sonnenhut, Sonnenbrille und Sonnencreme mit hohem Lichtschutzfaktor. Beachte, dass physikalischer Sonnenschutz (Kleidung, Hut, Sonnenbrille, Schatten) effektiver ist als chemischer Sonnenschutz (Sonnencreme)【4:2†source】.\n\nEs ist wichtig, sich bewusst zu sein und entsprechende Vorsichtsmaßnahmen zu treffen, wenn man sich bei warmem Wetter in der Stadt aufhält."
+2024-05-26 11:56:06,531 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:56:08,556 INFO:SYS> Es ist möglich, trotz der warmen Temperaturen in die Innenstadt zu gehen, wenn Sie einige Vorsichtsmaßnahmen beachten:
+
+1. **Hydration:** Trinken Sie ausreichend Wasser oder alkoholfreie Getränke.
+2. **Kleidung:** Tragen Sie helle, weite und leichte Kleidung.
+3. **Schutz:** Nutzen Sie einen Hut und Sonnenbrille, um Kopf und Augen zu schützen.
+4. **Zeitwahl:** Vermeiden Sie direkte Sonneneinstrahlung besonders zwischen 11 und 15 Uhr und erledigen Sie wichtige Dinge morgens oder abends.
+5. **Abkühlung:** Kühlen Sie Ihren Körper zwischendurch mit nassen Tüchern auf Armen, Beinen, Stirn oder Nacken.
+6. **Schattige Plätze:** Bevorzugen Sie schattige Plätze, um die Hitzebelastung zu minimieren.
+
+Damit sollten Sie gut gerüstet sein, um sich auch bei den heutigen Temperaturen in der Stadt aufzuhalten. 
+
+Benötigen Sie sonst noch Unterstützung?
+2024-05-26 11:57:04,461 INFO:USR> Sollte ich heute 15 Uhr in die Innenstadt gehen?
+2024-05-26 11:57:04,461 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:57:04,462 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:57:04'}
+2024-05-26 11:57:05,121 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:57:06,102 INFO:SYS> Am heutigen Tag waren die Temperaturen um 15 Uhr voraussichtlich bei 23.9°C. Beachten Sie zudem, dass die höchsten UV-Werte typischerweise zwischen 11 und 15 Uhr auftreten. Wenn Sie dennoch um diese Zeit in die Innenstadt gehen möchten, stellen Sie sicher, dass Sie ausreichend trinken, leichte Kleidung tragen und sich regelmäßig abkühlen.
+
+Brauchen Sie noch weitere Informationen oder Tipps?
+2024-05-26 11:57:38,942 INFO:USR> Was soll ich dann tragen?
+2024-05-26 11:57:38,942 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:57:38,943 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:57:38'}
+2024-05-26 11:57:39,696 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:57:41,320 INFO:SYS> Klare Empfehlungen für die richtige Kleidung bei Temperaturen um 15 Uhr (ca. 23.9°C) sind:
+
+1. Leichte, atmungsaktive und helle Kleidung, um die Hitze abzuwehren.
+2. Einen Hut oder eine Kappe, um den Kopf vor direkter Sonneneinstrahlung zu schützen.
+3. Sonnenbrille zum Schutz der Augen.
+4. Bequeme Schuhe, falls Sie längere Strecken laufen möchten.
+5. Eventuell Sonnencreme auf nicht bedeckte Hautstellen auftragen.
+
+Benötigen Sie noch weitere Tipps?
+2024-05-26 11:58:08,652 INFO:USR> Wie ist das Wetter an der Kreuzung der Görlitzer Straße und Luisenstraße
+2024-05-26 11:58:08,652 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:58:08,654 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:58:08'}
+2024-05-26 11:58:09,253 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:58:09,659 INFO:SYS> {"service": "NL2COORD", "args": {"description": "Görlitzer Straße Ecke Luisenstraße, Dresden"}}
+2024-05-26 11:58:10,716 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:58:14,977 INFO:SYS> "API-Antwort: {'error': 'Koordinaten konnten nicht bestimmt werden.'}"
+2024-05-26 11:58:15,599 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:58:16,446 INFO:SYS> Es scheint, dass ich die exakten Koordinaten für die Kreuzung Görlitzer Straße und Luisenstraße nicht bestimmen konnte. Könnten Sie mir einen anderen nahegelegenen Ort beschreiben oder eine zusätzliche Orientierungshilfe geben? Alternativ kann ich die allgemeinen Wetterdaten für eine größere bekannte Region abrufen, falls das hilfreich ist.
+2024-05-26 11:59:01,015 INFO:USR>  Wie ist das Wetter an der Kreuzung der Görlitzer Straße und Louisenstraße
+2024-05-26 11:59:01,016 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 11:59:01,016 INFO:SYS> API-Antwort: {'time': '26.05.2024 11:59:01'}
+2024-05-26 11:59:01,551 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:59:01,822 INFO:SYS> {"service": "NL2COORD", "args": {"description": "Görlitzer Straße Ecke Louisenstraße, Dresden"}}
+2024-05-26 11:59:02,840 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:59:04,929 INFO:SYS> "API-Antwort: {'error': 'Koordinaten konnten nicht bestimmt werden.'}"
+2024-05-26 11:59:05,512 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 11:59:07,141 INFO:SYS> Es scheint, dass ich die exakten Koordinaten für die Kreuzung Görlitzer Straße und Louisenstraße nicht bestimmen konnte. Könnten Sie mir eine zusätzliche Orientierungshilfe oder einen nahegelegenen bekannten Ort geben, um Ihnen besser helfen zu können? Vielleicht ein spezifisches Gebäude oder einen markanten Punkt in der Nähe?
+2024-05-26 12:00:01,731 INFO:USR> Wetter am Konsum am Ullersdorfer Platz
+2024-05-26 12:00:01,731 INFO:SYS> {"service": "CLOCK", "args": {}}
+2024-05-26 12:00:01,732 INFO:SYS> API-Antwort: {'time': '26.05.2024 12:00:01'}
+2024-05-26 12:00:02,827 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:03,111 INFO:SYS> {"service": "NL2COORD", "args": {"description": "Konsum am Ullersdorfer Platz, Dresden"}}
+2024-05-26 12:00:04,042 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:06,238 INFO:SYS> "API-Antwort: {'lat': 51.0614516, 'lon': 13.8545287}"
+2024-05-26 12:00:06,862 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:07,243 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0614516, "lon": 13.8545287", "attribute": "temperature"}}
+2024-05-26 12:00:07,906 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:08,451 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0614516, "lon": 13.8545287", "attribute": "temperature"}}
+2024-05-26 12:00:09,055 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:09,616 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0614516, "lon": 13.8545287", "attribute": "temperature"}}
+2024-05-26 12:00:10,309 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:10,840 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0614516, "lon": 13.8545287", "attribute": "temperature"}}
+2024-05-26 12:00:11,521 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:12,107 INFO:SYS> {"service": "GENERAL_WEATHER", "args": {"date": "2024-05-26", "lat": 51.0614516, "lon": 13.8545287, "attribute": "temperature"}}
+2024-05-26 12:00:12,243 INFO:SYS> "API-Antwort: [('2024-05-26T00:00', 12.1), ('2024-05-26T01:00', 11.3), ('2024-05-26T02:00', 10.6), ('2024-05-26T03:00', 10.6), ('2024-05-26T04:00', 10.4), ('2024-05-26T05:00', 11.9), ('2024-05-26T06:00', 14.8), ('2024-05-26T07:00', 16.5), ('2024-05-26T08:00', 18.8), ('2024-05-26T09:00', 20.2), ('2024-05-26T10:00', 21.1), ('2024-05-26T11:00', 21.6), ('2024-05-26T12:00', 22.3), ('2024-05-26T13:00', 22.6), ('2024-05-26T14:00', 22.2), ('2024-05-26T15:00', 22.2), ('2024-05-26T16:00', 21.6), ('2024-05-26T17:00', 21.6), ('2024-05-26T18:00', 20.4), ('2024-05-26T19:00', 19.1), ('2024-05-26T20:00', 18.4), ('2024-05-26T21:00', 17.7), ('2024-05-26T22:00', 17.4), ('2024-05-26T23:00', 17.1)]"
+2024-05-26 12:00:12,920 INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-05-26 12:00:13,821 INFO:SYS> Die Temperaturen am Konsum am Ullersdorfer Platz in Dresden am 26. Mai 2024 bewegen sich tagsüber von etwa 10.4°C frühmorgens bis maximal 22.6°C um die Mittagszeit und nachmittags. Später am Abend sinken die Temperaturen wieder auf rund 17.1°C. Können Sie noch weitere Unterstützung gebrauchen?

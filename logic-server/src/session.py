@@ -58,6 +58,12 @@ class DataAgent:
                 raise InvalidApiCall(
                     'Der API-Aufruf muss die Argumente \'lat\', \'lon\', \'date\' und \'attribute\' enthalten! Beispiel: {"service": <servicename>, "args": {...}}') from e
 
+            if not isinstance(lat, (int, float)):
+                raise InvalidApiCall("GENERAL_WEATHER: 'lat' muss eine Zahl sein!")
+
+            if not isinstance(lon, (int, float)):
+                raise InvalidApiCall("GENERAL_WEATHER: 'lon' muss eine Zahl sein!")
+
             if not isinstance(attribute, str):
                 raise InvalidApiCall("GENERAL_WEATHER: 'attribute' muss ein String sein!")
 
@@ -234,6 +240,7 @@ def create_session() -> Session:
     - Gib knappe, aber präzise Antworten, als würdest du ein Telefongespräch führen.
     - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu Beginn deiner Nachricht. Schreibe keinen Text davor.
     - Frage NIEMALS, ob du spezifische APIs nutzen sollst, sondern NUTZE SIE. Denke dir KEINE Temperaturen, Witterungsbedingungen oder Koordinaten aus.
+    - Denke dir keine Hitze-Tipps auf, die du in der HITZE_HANDBUCH-API finden kannst.
     - Falls kein Datum angegeben wurde, nimm heute an.
     - Nenne NIEMALS APIs beim Namen.
     - Vermeide Wiederholungen

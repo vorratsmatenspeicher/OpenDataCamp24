@@ -16,8 +16,8 @@ const emit = defineEmits([ 'onRecording' ]);
 
 // })
 
-const recognition = new webkitSpeechRecognition();
-const speechRecognitionList = new webkitSpeechGrammarList();
+const recognition = new (<any>window).webkitSpeechRecognition();
+const speechRecognitionList = new (<any>window).webkitSpeechGrammarList();
 
 recognition.grammars = speechRecognitionList;
 recognition.continuous = true;
@@ -25,7 +25,7 @@ recognition.lang = "de-DE";
 recognition.interimResults = true;
 recognition.maxAlternatives = 1;
 
-recognition.onresult = (event) => {
+recognition.onresult = (event: any) => {
   // console.log(event.results[0][0].transcript);
 
   emit('onRecording', event.results[0][0].transcript);

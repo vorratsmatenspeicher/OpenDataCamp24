@@ -107,7 +107,7 @@ class DataAgent:
                 from heat_tips_retrieval.file_retrieval import retrieve_from_file
                 yield from retrieve_from_file(None, prompt)
             except Exception as e:
-                raise
+                # raise
                 yield str({"error": str(e)})
         else:
             yield str({"error": f"Unknown service {service}"})

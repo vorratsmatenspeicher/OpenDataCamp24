@@ -107,7 +107,7 @@ class DataAgent:
                 from heat_tips_retrieval.file_retrieval import retrieve_from_file
                 yield from retrieve_from_file(None, prompt)
             except Exception as e:
-                # raise
+                raise
                 yield str({"error": str(e)})
         else:
             yield str({"error": f"Unknown service {service}"})
@@ -240,7 +240,7 @@ def create_session() -> Session:
     - Gib knappe, aber präzise Antworten, als würdest du ein Telefongespräch führen.
     - Kündige deine Aktionen nicht an. Wenn du eine API aufrufen möchtest, tu es zu Beginn deiner Nachricht. Schreibe keinen Text davor.
     - Frage NIEMALS, ob du spezifische APIs nutzen sollst, sondern NUTZE SIE. Denke dir KEINE Temperaturen, Witterungsbedingungen oder Koordinaten aus.
-    - Denke dir keine Hitze-Tipps auf, die du in der HITZE_HANDBUCH-API finden kannst.
+    - Bevor du Empfehlungen gibts, schau IMMER vorher mit der HITZE_HANDBUCH-API nach.
     - Falls kein Datum angegeben wurde, nimm heute an.
     - Nenne NIEMALS APIs beim Namen.
     - Vermeide Wiederholungen
